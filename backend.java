@@ -1,9 +1,10 @@
 import java.util.*; 
+import java.io.*;
 class backend{ 
 	static final int MAXN = 93; 
 	static int INF = (int) 1e7; 
-	static int [][]dis = new int[MAXN][MAXN]; 
-	static int [][]Next = new int[MAXN][MAXN]; 
+	static int [][]displacement = new int[MAXN][MAXN]; 
+	static int [][]nextnode = new int[MAXN][MAXN]; 
 	static void node_IndexHashmap(HashMap<Integer, String> nodeindex){
 		//BLUE LINE
 		nodeindex.put(0, "Kavi Subhash");
@@ -124,57 +125,109 @@ class backend{
 		//TELGHORIA
 		//BIMAN BANDAR
 		//END OF ORANGE LINE	
-	
-
 	}
 	static void initialise(int V, int [][] graph){ 
 		for(int i = 0; i < V; i++){ 
 			for(int j = 0; j < V; j++){ 
-				dis[i][j] = graph[i][j]; 
+				displacement[i][j] = graph[i][j]; 
 				if(graph[i][j] == INF){ 
-					Next[i][j] = -1; 
+					nextnode[i][j] = -1; 
 				}
 				else{
-					Next[i][j] = j;
+					nextnode[i][j] = j;
 				} 
 			} 
 		} 
-	} 
-	static Vector<Integer> constructPath(int u, int v){ 
-		if(Next[u][v] == -1){
-			return null; 
-		}
-		Vector<Integer> path = new Vector<Integer>(); 
-		path.add(u); 
-		while(u != v){ 
-			u = Next[u][v]; 
-			path.add(u); 
-		} 
-		return path; 
 	} 
 	static void floydWarshall(int V){ 
 		for(int k = 0; k < V; k++){ 
 			for(int i = 0; i < V; i++){ 
 				for(int j = 0; j < V; j++){ 
-					if(dis[i][k] == INF || dis[k][j] == INF) 
+					if(displacement[i][k] == INF || displacement[k][j] == INF) 
 						continue; 	
-					if(dis[i][j] > dis[i][k] + dis[k][j]){ 
-						dis[i][j] = dis[i][k] + dis[k][j]; 
-						Next[i][j] = Next[i][k]; 
+					if(displacement[i][j] > displacement[i][k] + displacement[k][j]){ 
+						displacement[i][j] = displacement[i][k] + displacement[k][j]; 
+						nextnode[i][j] = nextnode[i][k]; 
 					} 
 				} 
 			} 
 		} 
-	} 
-	static void printPath(Vector<Integer> path){ 
-		int n = path.size(); 
-		for(int i = 0; i < n - 1; i++){
-			System.out.print(path.get(i) + " -> "); 
+	}
+	static Vector<Integer> constructPath(int u, int v){ 
+		if(nextnode[u][v] == -1){
+			return null; 
 		}
-		System.out.print(path.get(n - 1) + "\n"); 
+		Vector<Integer> path = new Vector<Integer>(); 
+		path.add(u); 
+		while(u != v){ 
+			u = nextnode[u][v]; 
+			path.add(u); 
+		} 
+		return path; 
+	}
+	static void printPath(Vector<Integer> path, HashMap<Integer, String> nodeindex){ 
+		int n = path.size();
+		for(int i = 0; i < n - 1; i++){
+			System.out.print(nodeindex.get(path.get(i)) + " -> "); 
+		}
+		System.out.print(nodeindex.get(path.get(n - 1)) + "\n"); 
+	}
+	static class pathData{
+		float avgspeed;
+		int nodecount;
+		int distance;
+		float time;
+		int fare;
+		Vector<Integer> path;
+		public pathData(float avgspeed, int nodecount, int distance, float time, int fare, Vector<Integer> path){
+			this.avgspeed = avgspeed;
+			this.nodecount = nodecount;
+			this.distance = distance;
+			this.time = time;
+			this.fare = fare;
+			this.path = path;
+		}
 	} 
+	static pathData pathDetails(int u, int v){
+		Vector<Integer> path;
+		path = constructPath(u, v);
+		int nodecount = path.size();
+		int distance = displacement[path.get(0)][path.get(path.size()-1)];
+		final float avgspeed = 30.00f;
+		float time = (float)distance / avgspeed * 60;
+		int fare;
+		if(distance == 0){
+			fare = 0;
+		}
+		else if(distance > 0 && distance <= 2){
+			fare = 5;
+		}
+		else if(distance > 2 && distance <= 5){
+			fare = 10;
+		}
+		else if(distance > 5 && distance <= 10){
+			fare = 15;
+		}
+		else if(distance > 10 && distance <= 20){
+			fare = 20;
+		}
+		else if(distance > 20 && distance <= 30){
+			fare = 25;
+		}
+		else if(distance > 30 && distance <= 40){
+			fare = 30;
+		}
+		else if(distance > 40 && distance <= 50){
+			fare = 35;
+		}
+		else{
+			fare = 40;
+		}	
+		return new pathData(avgspeed, nodecount, distance, time, fare, path);
+	}
 	public static void main(String[] args){ 
 		HashMap<Integer, String> nodeindex = new HashMap<>();
+		node_IndexHashmap(nodeindex);
 		int V = 93; 
 		int [][] graph = {// 0  ,1  ,2  ,3  ,4  ,5  ,6  ,7  ,8  ,9  ,10 ,11 ,12 ,13 ,14 ,15 ,16 ,17 ,18 ,19 ,20 ,21 ,22 ,23 ,24 ,25 ,26 ,27 ,28 ,29 ,30 ,31 ,32 ,33 ,34 ,35 ,36 ,37 ,38 ,39 ,40 ,41 ,42 ,43 ,44 ,45 ,46 ,47 ,48 ,49 ,50 ,51 ,52 ,53 ,54 ,55 ,56 ,57 ,58 ,59 ,60 ,61 ,62 ,63 ,64 ,65 ,66 ,67 ,68 ,69 ,70 ,71 ,72 ,73 ,74 ,75 ,76 ,77 ,78 ,79 ,80 ,81 ,82 ,83 ,84 ,85 ,86 ,87 ,88 ,89 ,90 ,91 ,92  
 					/* 0 */ {0  ,1  ,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,3  ,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF},
@@ -272,11 +325,15 @@ class backend{
 					/* 92 */{INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,7  ,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,5  ,0  }};
 							
 		initialise(V, graph); 
-		floydWarshall(V); 
-		Vector<Integer> path; 
-		System.out.print("Shortest path from 19 to 37: "); 
-		path = constructPath(19, 37); 
-		printPath(path); 
+		floydWarshall(V);   
+		pathData p = pathDetails(10, 30);
+		System.out.println("THE AVGERAGE SPEED IS : " + p.avgspeed + " KM/HR");
+		System.out.println("THE NUMBER OF STATIONS IN THE PATH IS : " + p.nodecount);
+		System.out.println("THE DISATANCE IS : " + p.distance + " KM");
+		System.out.println("THE TIME REQUIRED IS : " + p.time + " MIN");
+		System.out.println("THE FARE REQUIRED IS : " + p.fare + " RS");
+		System.out.println("THE CORRESPONDING PATH IS : ");
+		printPath(p.path,nodeindex);
 
 	} 
 } 
