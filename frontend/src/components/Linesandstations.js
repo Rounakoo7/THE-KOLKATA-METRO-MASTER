@@ -112,14 +112,23 @@ function Linesandstations(props) {
     }, [])
     const handleline = (id) => {
         const dt = stations.filter(x => x.lineId === id);
+        if((props.name === "station1") && (id === "Line")){
+            props.handleline(id + "1");
+        }
+        else if((props.name === "station2") && (id === "Line")){
+            props.handleline(id + "2");
+        }   
+        else{
+            props.handleline(id);
+        }
         setStation(dt);
-    }
+    } 
     return (
         <>
         <div className="row g-3">
             <div className="col-6">
-                <select id="lines" class="form-select" aria-label="Default select example" style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black' }} onChange={(e) => handleline(e.target.value)}>
-                    <option selected style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black' }}>Line</option>
+                <select id="lines" className="form-select" aria-label="Default select example" style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black' }} onClick={(e) => {handleline(e.target.value)}} required>
+                    <option defaultValue="Line" style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black' }}>Line</option>
                     {
                         line &&
                             line !== undefined ?
@@ -133,8 +142,8 @@ function Linesandstations(props) {
                 </select>
             </div>
             <div className="col-6">
-                <select id="stations" class="form-select" aria-label="Default select example" style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black' }}>
-                    <option selected style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black' }}>Station</option>
+                <select id="stations" className="form-select" aria-label="Default select example" style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black' }} name={props.name} onChange={props.handleInputChange} required>
+                    <option selected="Station" style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black' }}>Station</option>
                     {
                         station &&
                             station !== undefined ?

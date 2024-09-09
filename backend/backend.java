@@ -324,7 +324,7 @@ class backend{
 					/* 92 */{INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,7  ,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,INF,5  ,0  }};
 		initialise(V, graph); 
 		floydWarshall(V);   
-		pathData p = pathDetails(3,62);
+		pathData p = pathDetails(29,74);
 		System.out.println("THE AVGERAGE SPEED IS : " + p.avgspeed + " KM/HR");
 		System.out.println("THE NUMBER OF STATIONS IN THE PATH IS : " + p.nodecount);
 		System.out.println("THE DISATANCE IS : " + p.distance + " KM");

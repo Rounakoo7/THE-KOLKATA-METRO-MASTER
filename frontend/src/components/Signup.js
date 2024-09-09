@@ -4,7 +4,6 @@ import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye'
 function Signup(props) {
-  const [password1, setPassword1] = useState("");
   const [type1, setType1] = useState('password');
   const [icon1, setIcon1] = useState(eyeOff);
   const handleToggle1 = () => {
@@ -16,7 +15,6 @@ function Signup(props) {
       setType1('password')
     }
   }
-  const [password2, setPassword2] = useState("");
   const [type2, setType2] = useState('password');
   const [icon2, setIcon2] = useState(eyeOff);
   const handleToggle2 = () => {
@@ -29,6 +27,31 @@ function Signup(props) {
     }
   }
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    password1: "",
+    password2: ""
+  });
+  const handleInputChange = event =>{
+    const {target: {name, value}} = event;
+    setFormData(formData => {
+      return {
+        ...formData,
+        [name]:value,
+      }
+    })    
+  }
+  const handleSubmit = event =>{
+    event.preventDefault();
+    console.log(formData);
+    try {
+      //const response = await fetch("http://localhost:8080/") 
+    } catch (error) {
+      
+    }
+    //navigate("/log-in")
+  }
   return (
     <div>
       <br />
@@ -38,29 +61,26 @@ function Signup(props) {
       <div className="container-sm" style={{ backgroundColor:'rgba(0,0,0,0.5)', maxWidth: "600px" }}>
         <h1 style={{ color: 'white' }}>User Sign Up</h1>
         <br /><br />
-        <form className="row g-3" onSubmit={() => navigate("/log-in")}>
+        <form className="row g-3" onSubmit={handleSubmit}>
           <div className="col-md-12">
-            <input type="text" className="form-control input white-placeholder" id="adminuserid" style={{ backgroundColor: "transparent", border: "none", borderBottom: "2px solid #ffffff", color: "#ffffff" }} placeholder="Name" required />
+            <input type="text" className="form-control input white-placeholder" name="name" style={{ backgroundColor: "transparent", border: "none", borderBottom: "2px solid #ffffff", color: "#ffffff" }} placeholder="Name" value={formData.name} onChange={handleInputChange} required />
           </div>
           <div className="col-md-12">
-            <input type="number" className="form-control input white-placeholder" id="adminuserid" style={{ backgroundColor: "transparent", border: "none", borderBottom: "2px solid #ffffff", color: "#ffffff" }} placeholder="Phone Number" required />
-          </div>
-          <div className="col-md-12">
-            <input type="email" className="form-control input white-placeholder" id="adminuserid" style={{ backgroundColor: "transparent", border: "none", borderBottom: "2px solid #ffffff", color: "#ffffff" }} placeholder="Town or Village" required />
+            <input type="number" className="form-control input white-placeholder" name="phone" style={{ backgroundColor: "transparent", border: "none", borderBottom: "2px solid #ffffff", color: "#ffffff" }} placeholder="Phone Number" value={formData.phone} onChange={handleInputChange} required />
           </div>
           <div className="col-md-12">
             <div className="input-group flex-nowrap">
-              <input type={type1} className="form-control input white-placeholder" id="adminuserid1" style={{ backgroundColor: "transparent", border: "none", borderBottom: "2px solid #ffffff", color: "#ffffff" }} placeholder="Enter Password" required value={password1} onChange={(e) => setPassword1(e.target.value)} autoComplete="current-password" />
-              <span class="input-group-text" id="addon-wrapping" onClick={handleToggle1}>
-                <Icon class="absolute mr-10" icon={icon1} size={25} />
+              <input type={type1} className="form-control input white-placeholder" name="password1" style={{ backgroundColor: "transparent", border: "none", borderBottom: "2px solid #ffffff", color: "#ffffff" }} placeholder="Enter Password" value={formData.password1} onChange={handleInputChange} autoComplete="current-password" required />
+              <span className="input-group-text" id="addon-wrapping" onClick={handleToggle1}>
+                <Icon className="absolute mr-10" icon={icon1} size={25} />
               </span>
             </div>
           </div>          
           <div className="col-md-12">
             <div className="input-group flex-nowrap">
-              <input type={type2} className="form-control input white-placeholder" id="adminuserid2" style={{ backgroundColor: "transparent", border: "none", borderBottom: "2px solid #ffffff", color: "#ffffff" }} placeholder="Confirm Password" required value={password2} onChange={(e) => setPassword2(e.target.value)} autoComplete="current-password" />
-              <span class="input-group-text" id="addon-wrapping" onClick={handleToggle2}>
-                <Icon class="absolute mr-10" icon={icon2} size={25} />
+              <input type={type2} className="form-control input white-placeholder" name="password2" style={{ backgroundColor: "transparent", border: "none", borderBottom: "2px solid #ffffff", color: "#ffffff" }} placeholder="Confirm Password" value={formData.password2} onChange={handleInputChange} autoComplete="current-password" required />
+              <span className="input-group-text" id="addon-wrapping" onClick={handleToggle2}>
+                <Icon className="absolute mr-10" icon={icon2} size={25} />
               </span>
             </div>
           </div>          

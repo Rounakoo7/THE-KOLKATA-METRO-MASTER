@@ -30,7 +30,8 @@ function App() {
     })
     setTimeout(() => {
       setAlert(null);
-    }, 1500);
+    }, 1000);
+    return 0;
   }
   const toggleMode = () => {
     if (mode === 'light') {
@@ -99,7 +100,7 @@ function App() {
       element: <>
         <Navbar mode={mode} toggleMode={toggleMode} loggedin="yes" toggleLoggedIn={toggleLoggedIn}/>
         <Alert alert={alert} />
-        <Usernavigate />
+        <Usernavigate showAlert={showAlert}y/>
       </>,
     },
     {
