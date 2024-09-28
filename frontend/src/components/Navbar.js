@@ -27,13 +27,13 @@ export default function Navbar(props) {
                             {(props.loggedin === "yes") &&
                                 <>
                                     <li className="nav-item">
-                                        <Link className={`nav-link ${location.pathname === "/user" ? "active" : ""}`} to="/user" onClick={props.toggleLoggedIn}>Map</Link>
+                                        <Link className={`nav-link ${location.pathname === "/user" ? "active" : ""}`} to="/user">Map</Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link className={`nav-link ${location.pathname === "/user-fare" ? "active" : ""}`} to="/user-fare" onClick={props.toggleLoggedIn}>Fare Details</Link>
+                                        <Link className={`nav-link ${location.pathname === "/user-fare" ? "active" : ""}`} to="/user-fare">Fare Details</Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link className={`nav-link ${location.pathname === "/user-navigate" ? "active" : ""}`} to="/user-navigate" onClick={props.toggleLoggedIn}>Navigate</Link>
+                                        <Link className={`nav-link ${location.pathname === "/user-navigate" ? "active" : ""}`} to="/user-navigate">Navigate</Link>
                                     </li>
                                     <li className="nav-item">
                                         <Link className="nav-link active" to="/" onClick={props.toggleLoggedIn}>Log Out</Link>
