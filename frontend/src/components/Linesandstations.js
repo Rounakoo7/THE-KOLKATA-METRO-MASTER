@@ -127,7 +127,7 @@ function Linesandstations(props) {
         <>
         <div className="row g-3">
             <div className="col-6">
-                <select id="lines" className="form-select" aria-label="Default select example" style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black' }} onClick={(e) => {handleline(e.target.value)}} required>
+                <select id={`${props.name === "station1"?"lines1":"lines2"}`} className="form-select" aria-label="Default select example" style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black' }} onClick={(e) => {handleline(e.target.value)}} required>
                     <option defaultValue="Line" style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black' }}>Line</option>
                     {
                         line &&
@@ -142,7 +142,7 @@ function Linesandstations(props) {
                 </select>
             </div>
             <div className="col-6">
-                <select id="stations" className="form-select" aria-label="Default select example" style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black' }} name={props.name} onChange={props.handleInputChange} required>
+                <select id={`${props.name === "station1"?"stations1":"stations2"}`} className="form-select" aria-label="Default select example" style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black' }} name={props.name} onChange={props.handleInputChange} required>
                     <option selected="Station" style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black' }}>Station</option>
                     {
                         station &&

@@ -1,8 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import LogoutError from './LogoutError';
 import Cookies from 'universal-cookie';
 
 function Userfare(props) {
+  const toggleProgress = props.toggleProgress
+  useEffect(() => {
+    toggleProgress(70);
+    toggleProgress(100);
+    return () => {
+    }
+  }, [])
   const cookies = new Cookies();
   return (<>{cookies.get("jwt") !== undefined?
     <div>

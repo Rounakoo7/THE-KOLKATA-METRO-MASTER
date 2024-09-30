@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from './Axios';
 import Cookies from 'universal-cookie';
 import { useNavigate } from 'react-router-dom'
@@ -10,6 +10,13 @@ import { toast } from 'react-toastify';
 import LogoutError from './LogoutError';
 
 function Usernavigate(props) {
+  const toggleProgress = props.toggleProgress
+  useEffect(() => {
+    toggleProgress(70);
+    toggleProgress(100);
+    return () => {
+    }
+  }, [])
   const cookies = new Cookies();
   const stations = [
     { id: "1", lineId: "1", name: "Shahid Khudiram" },
@@ -106,15 +113,24 @@ function Usernavigate(props) {
     { id: "92", lineId: "7", name: "Teghoria" },
     { id: "93", lineId: "7", name: "Biman Bandar" },
   ]
+  var stationcolour = {
+    1 : "blue",
+    2 : "#1de11d",
+    3 : "#b806b8",
+    4 : "red",
+    5 : "#fb0793",
+    6 : "#ff6500",
+    7 : "grey",
+  }
   const navigate = useNavigate();
   const [counter, setCounter] = useState(0);
-  useEffect(() => {
+  const startCounter = () => {
     if (counter <= 99) {
       setTimeout(() => {
         setCounter(counter + 1);
-      }, 5);
+      }, 2/nodecount);
     }
-  }, [counter])
+  }
   const search = (property_value, array) => {
     return array.filter((x) => x.id === property_value)[0].name;
   }
@@ -168,18 +184,38 @@ function Usernavigate(props) {
       })
     }
   }
+  const [avgspeed, setAvgspeed] = useState(0.00);
+  const [nodecount, setNodecount] = useState(0);
+  const [distance, setDistance] = useState(0);
+  const [time, setTime] = useState(0.00);
+  const [fare, setFare] = useState(0);
+  const [path, setPath] = useState([]);
   const handleSubmit = async (event) => {
     event.preventDefault();
     if((formData.station1 !== "Station") && (formData.station2 !== "Station") && (lbool1 !== "Line1") && (lbool2 !== "Line2")){
-      console.log(formData);
+      if(formData.station1 !== formData.station2){
+      setAvgspeed(0.00);
+      setNodecount(0);
+      setDistance(0);
+      setTime(0.00);
+      setFare(0);
+      setPath([]);
+      setCounter(0);
       try {
         const config = {
           headers: { "Authorization": `Bearer ${cookies.get('jwt')}`, },
         };
         const response = await axios.post("/fw",formData,config);
-        console.log(response);
         if (response.status === 201){
-          toast.success("Logged in successfully");
+          toggleProgress(10);
+          setAvgspeed(response.data.avgspeed);
+          setNodecount(response.data.nodecount);
+          setDistance(response.data.distance);
+          setTime(response.data.time);
+          setFare(response.data.fare);
+          toggleProgress(70);
+          setPath(response.data.path);
+          toggleProgress(100);
         }
         else {
           const errorData = await response.json()
@@ -196,6 +232,10 @@ function Usernavigate(props) {
         else {
           toast.error("Server error. Please try again later");
         }
+      }
+      }
+      else{
+        toast.error("Search fields are same");  
       }
     }
     else{
@@ -225,40 +265,21 @@ function Usernavigate(props) {
         </form>
         <br />
         <br />
-        <div style={{ overflow: "scroll", maxWidth: "1500px", paddingLeft: "50px", border: "1px solid black", backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white' }}>
+        {nodecount === 0?<></>:<>{startCounter()}
+        <div style={{ overflow: "scroll", maxWidth: "1500px", paddingLeft: "70px",  paddingRight: "70px",border: "1px solid black", backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white' }}>
           <br />
           <br />
-          <ProgressBar percent={counter} filledBackground="linear-gradient(to right, #fefb72, #fefb72)">
-            <Step transition="scale">
-              {({ accomplished }) => (
-                <span className="badge rounded-pill text" style={{ filter: `grayscale(${accomplished ? 0 : 80}%)`, backgroundColor: "red" }}>Park Street</span>
-              )}
-            </Step>
-            <Step transition="scale">
-              {({ accomplished }) => (
-                <span className="badge rounded-pill text-bg" style={{ filter: `grayscale(${accomplished ? 0 : 80}%)`, backgroundColor: "red" }}>Primary</span>
-              )}
-            </Step>
-            <Step transition="scale">
-              {({ accomplished }) => (
-                <span className="badge rounded-pill text-bg" style={{ filter: `grayscale(${accomplished ? 0 : 80}%)`, backgroundColor: "red" }}>Primary</span>
-              )}
-            </Step>
-            <Step transition="scale">
-              {({ accomplished }) => (
-                <span className="badge rounded-pill text-bg" style={{ filter: `grayscale(${accomplished ? 0 : 80}%)`, backgroundColor: "red" }}>Primary</span>
-              )}
-            </Step>
-            <Step transition="scale">
-              {({ accomplished }) => (
-                <span className="badge rounded-pill text-bg" style={{ filter: `grayscale(${accomplished ? 0 : 80}%)`, backgroundColor: "red" }}>Primary</span>
-              )}
-            </Step>
-            <Step transition="scale">
-              {({ accomplished }) => (
-                <span className="badge rounded-pill text-bg" style={{ filter: `grayscale(${accomplished ? 0 : 80}%)`, backgroundColor: "red" }}>Primary</span>
-              )}
-            </Step>
+          <ProgressBar percent={counter} filledBackground="linear-gradient(to right, #fefb72, #fefb72)" width={`${nodecount*200}px`}>
+            {path.map( (st, index) => {
+                  return (
+                    <Step transition="scale">
+                      {({ accomplished }) => (
+                        <span className="badge rounded-pill text" style={{ filter: `grayscale(${accomplished ? 0: (index === (nodecount - 1) ? 0: 100)}%)`, backgroundColor: `${stationcolour[stations.find((station) => (station.name === st)).lineId]}` }}>{st}</span>
+                      )}
+                    </Step>
+                  )
+              })
+            }
           </ProgressBar>
           <br />
           <br />
@@ -319,24 +340,24 @@ function Usernavigate(props) {
             <div className="container text-center">
               <div className="row g-2">
                 <div className="col-12" style={{ paddingTop: "40px", color: props.mode === 'dark' ? 'white' : 'black' }}>
-                  <h3>The Average Speed is <Spancounter start="0" end="30" durationinseconds="3" /> Kilometers/Hour</h3>
+                  <h3>The Average Speed is <Spancounter start="0" end={`${avgspeed}`} durationinseconds="0.1" /> Kilometers/Hour</h3>
                 </div>
                 <div className="col-6" style={{ paddingTop: "10px" }}>
-                  <div className="p-3" style={{ backgroundColor: "#d088f8", border: "1px solid #3a0c3a" }}><Spancounter start="0" end="100" durationinseconds="3" /> Stations</div>
+                  <div className="p-3" style={{ backgroundColor: "#d088f8", border: "1px solid #3a0c3a" }}><Spancounter start="0" end={`${nodecount}`} durationinseconds="0.1" /> Stations</div>
                 </div>
                 <div className="col-6" style={{ paddingTop: "10px" }}>
-                  <div className="p-3" style={{ backgroundColor: "#d088f8", border: "1px solid #3a0c3a" }} ><Spancounter start="0" end="100" durationinseconds="3" /> Kilometers</div>
+                  <div className="p-3" style={{ backgroundColor: "#d088f8", border: "1px solid #3a0c3a" }} ><Spancounter start="0" end={`${distance}`} durationinseconds="0.1" /> Kilometers</div>
                 </div>
                 <div className="col-6" style={{ paddingTop: "10px" }}>
-                  <div className="p-3" style={{ backgroundColor: "#d088f8", border: "1px solid #3a0c3a" }} ><Spancounter start="0" end="100" durationinseconds="3" /> Minutes</div>
+                  <div className="p-3" style={{ backgroundColor: "#d088f8", border: "1px solid #3a0c3a" }} ><Spancounter start="0" end={`${time}`} durationinseconds="0.1" /> Minutes</div>
                 </div>
                 <div className="col-6" style={{ paddingTop: "10px" }}>
-                  <div className="p-3" style={{ backgroundColor: "#d088f8", border: "1px solid #3a0c3a" }} ><Spancounter start="0" end="100" durationinseconds="3" /> Rupees</div>
+                  <div className="p-3" style={{ backgroundColor: "#d088f8", border: "1px solid #3a0c3a" }} ><Spancounter start="0" end={`${fare}`} durationinseconds="0.1" /> Rupees</div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </div></>}
       </div>
       <br />
       <br />

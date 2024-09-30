@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from './Axios';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from 'react-icons-kit';
@@ -9,6 +9,13 @@ import Cookies from 'universal-cookie';
 import LoginError from './LoginError';
 
 function Signup(props) {
+  const toggleProgress = props.toggleProgress
+  useEffect(() => {
+    toggleProgress(70);
+    toggleProgress(100);
+    return () => {
+    }
+  }, [])
   const cookies = new Cookies();
   const [type1, setType1] = useState('password');
   const [icon1, setIcon1] = useState(eyeOff);
@@ -62,6 +69,7 @@ function Signup(props) {
         try {
           const response = await axios.post("/register", finalFormData);
           if (response.status === 201) {
+            toggleProgress(10);
             navigate("/log-in")
             toast.success("Registration successfull");
           }

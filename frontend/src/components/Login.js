@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from './Axios';
 import Cookies from 'universal-cookie';
 import { jwtDecode } from 'jwt-decode';
@@ -10,6 +10,13 @@ import { toast } from 'react-toastify';
 import LoginError from './LoginError';
 
 function Login(props) {
+  const toggleProgress = props.toggleProgress
+  useEffect(() => {
+    toggleProgress(70);
+    toggleProgress(100);
+    return () => {
+    }
+  }, [])
   const cookies = new Cookies();
   const [type, setType] = useState('password');
   const [icon, setIcon] = useState(eyeOff);
@@ -41,9 +48,10 @@ function Login(props) {
     try {
       const response = await axios.post("/login", formData);
       if (response.status === 200){
+        toggleProgress(10);
         const decoded = jwtDecode(response.data);
+        toggleProgress(20);
         cookies.set("jwt",response.data, {expires: new Date(decoded.exp *1000),});
-        console.log(cookies.get('jwt'));
         navigate("/user");    
         toast.success("Logged in successfully");
       }

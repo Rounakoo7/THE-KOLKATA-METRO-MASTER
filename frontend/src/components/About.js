@@ -1,9 +1,16 @@
 import React from 'react'
 import Cookies from 'universal-cookie'
 import LoginError from './LoginError';
+import { useEffect } from 'react';
 function About(props) {
+  const toggleProgress = props.toggleProgress
+  useEffect(() => {
+    toggleProgress(70);
+    toggleProgress(100);
+    return () => {
+    }
+  }, [])
   const cookies = new Cookies();
-
   return (<>{cookies.get("jwt") === undefined? 
     <div className="container">
       <br /><br />
