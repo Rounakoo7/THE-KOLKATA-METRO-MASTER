@@ -1,11 +1,15 @@
 import React, { useState } from 'react'
-import axios from 'axios';
+import axios from './Axios';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye'
 import { toast } from 'react-toastify';
+import Cookies from 'universal-cookie';
+import LoginError from './LoginError';
+
 function Signup(props) {
+  const cookies = new Cookies();
   const [type1, setType1] = useState('password');
   const [icon1, setIcon1] = useState(eyeOff);
   const handleToggle1 = () => {
@@ -47,38 +51,43 @@ function Signup(props) {
   }
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (formData.password1 === formData.password2) {
-      const finalFormData = {
-        name: formData.name,
-        phone: formData.phone,
-        email: formData.email,
-        password: formData.password1,
+    if (formData.phone.length === 10) {
+      if (formData.password1 === formData.password2) {
+        const finalFormData = {
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          password: formData.password1,
+        }
+        try {
+          const response = await axios.post("/register", finalFormData);
+          if (response.status === 201) {
+            navigate("/log-in")
+            toast.success("Registration successfull");
+          }
+          else {
+            const errorText = await response.text();
+            toast.error(errorText);
+          }
+        }
+        catch (error) {
+          if (error.message.substring(error.message.length - 3, error.message.length) === "400") {
+            toast.error("Phone number or Email ID already registered");
+          }
+          else {
+            toast.error("Server error. Please try again later");
+          }
+        }
       }
-      try {
-        const response = await axios.post('http://localhost:1010/register', finalFormData);
-        if (response.status === 201) {
-          navigate("/log-in")
-          toast.success("Registration successfull");
-        }
-        else {
-          const errorText = await response.text();
-          toast.error(errorText);
-        }
-      }
-      catch (error) {
-        if (error.message.substring(error.message.length - 3,error.message.length) === "400") {
-          toast.error("Phone number or Email ID already registered");
-        }
-        else {
-          toast.error("Server error. Please try again later");
-        }
+      else {
+        toast.error("Passwords do not match");
       }
     }
     else {
-      toast.error("Passwords do not match");
+      toast.error("Phone number should be of length 10 digits");
     }
   }
-  return (
+  return (<>{cookies.get("jwt") === undefined?
     <div>
       <br />
       <br />
@@ -121,7 +130,7 @@ function Signup(props) {
       </div>
       <br />
       <br />
-    </div>
+    </div>:<><LoginError mode={props.mode} removeJwt={props.removeJwt} /></>}</>
   )
 }
 

@@ -1,11 +1,16 @@
 import React, { useState } from 'react'
-import axios from 'axios';
+import axios from './Axios';
+import Cookies from 'universal-cookie';
+import { jwtDecode } from 'jwt-decode';
 import { Link, useNavigate } from 'react-router-dom';
 import { Icon } from 'react-icons-kit';
 import { eyeOff } from 'react-icons-kit/feather/eyeOff';
 import { eye } from 'react-icons-kit/feather/eye'
 import { toast } from 'react-toastify';
+import LoginError from './LoginError';
+
 function Login(props) {
+  const cookies = new Cookies();
   const [type, setType] = useState('password');
   const [icon, setIcon] = useState(eyeOff);
   const handleToggle = () => {
@@ -18,7 +23,6 @@ function Login(props) {
     }
   }
   const navigate = useNavigate();
-  const toggle = props.toggleLoggedIn;
   const [formData, setFormData] = useState({
     phone: "",
     password: ""
@@ -35,9 +39,12 @@ function Login(props) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:1010/login', formData);
+      const response = await axios.post("/login", formData);
       if (response.status === 200){
-        navigate("/user"); toggle()
+        const decoded = jwtDecode(response.data);
+        cookies.set("jwt",response.data, {expires: new Date(decoded.exp *1000),});
+        console.log(cookies.get('jwt'));
+        navigate("/user");    
         toast.success("Logged in successfully");
       }
       else {
@@ -54,7 +61,7 @@ function Login(props) {
       }
     }
   }
-  return (
+  return (<>{cookies.get("jwt") === undefined?
     <div>
       <br />
       <br />
@@ -77,7 +84,7 @@ function Login(props) {
             </div>
           </div>
           <div className="col-12">
-            <button type="submit" className="btn btn-primary">Log in</button>
+            <button type="submit" className="btn btn-primary">Log In</button>
             <Link style={{ color: "white", paddingLeft: "15px" }} to="/sign-up">Not an user? Sign up</Link>
           </div>
         </form>
@@ -85,7 +92,7 @@ function Login(props) {
       </div>
       <br />
       <br />
-    </div>
+    </div>:<><LoginError mode={props.mode} removeJwt={props.removeJwt} /></>}</>
   )
 }
 

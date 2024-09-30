@@ -1,5 +1,7 @@
 package com.rounak.backend.service;
 
+import com.rounak.backend.model.PathData;
+import com.rounak.backend.model.StationData;
 import org.springframework.stereotype.Service;
 import java.util.*;
 
@@ -7,8 +9,8 @@ import java.util.*;
 public class FloydWarshallService{
     static final int MAXN = 93;
     static int INF = (int) 1e7;
-    static int [][]displacement = new int[MAXN][MAXN];
-    static int [][]nextnode = new int[MAXN][MAXN];
+    int [][]displacement = new int[MAXN][MAXN];
+    int [][]nextnode = new int[MAXN][MAXN];
     private static final Map<Integer, String> nodeindex;
     static {
         nodeindex = new HashMap<>();
@@ -132,7 +134,130 @@ public class FloydWarshallService{
         //BIMAN BANDAR
         //END OF ORANGE LINE
     }
-    static void initialise(int V, int [][] graph){
+    private static final Map<String, Integer> indexnode;
+    static {
+        indexnode = new HashMap<>();
+        //BLUE LINE
+        indexnode.put("Kavi Subhash", 0);
+        indexnode.put("Shahid Khudiram", 1);
+        indexnode.put("Gitanjali", 2);
+        indexnode.put("Kavi Nazrul", 3);
+        indexnode.put("Masterda Surya Sen", 4);
+        indexnode.put("Netaji", 5);
+        indexnode.put("Mahanayak Uttam Kumar", 6);
+        indexnode.put("Rabindra Sarobar", 7);
+        indexnode.put("Kalighat", 8);
+        indexnode.put("Jatin Das Park", 9);
+        indexnode.put("Netaji Bhavan", 10);
+        indexnode.put("Rabindra Sadan", 11);
+        indexnode.put("Maidan", 12);
+        indexnode.put("Park Street", 13);
+        indexnode.put("Esplanade", 14);
+        indexnode.put("Chandni Chowk", 15);
+        indexnode.put("Central", 16);
+        indexnode.put("Mahatma Gandhi Road", 17);
+        indexnode.put("Girish Park", 18);
+        indexnode.put("Shobhabazar Sutanuti", 19);
+        indexnode.put("Shyambazar", 20);
+        indexnode.put("Belgachhia", 21);
+        indexnode.put("Dum Dum", 22);
+        indexnode.put("Noapara", 23);
+        indexnode.put("Baranagar", 24);
+        indexnode.put("Dakshineswar", 25);
+        //END OF BLUE LINE
+
+        //GREEN LINE
+        indexnode.put("Howrah Maidan", 26);
+        indexnode.put("Howrah", 27);
+        indexnode.put("MahaKaran", 28);
+        //ESPLANADE
+        indexnode.put("Sealdah", 29);
+        indexnode.put("Phoolbagan", 30);
+        indexnode.put("Salt Lake Stadium", 31);
+        indexnode.put("Bengal Chemical", 32);
+        indexnode.put("City Center", 33);
+        indexnode.put("Cenrtral Park", 34);
+        indexnode.put("Karunamoyee", 35);
+        indexnode.put("Salt Lake Sector-V", 36);
+        indexnode.put("Keshtopur", 37);
+        indexnode.put("Dum Dum Park", 38);
+        indexnode.put("Baguiati", 39);
+        indexnode.put("Raghunathpur", 40);
+        indexnode.put("Teghoria", 41);
+        //END OF GREEN LINE
+
+        //PURPLE LINE
+        //ESPLANADE
+        //PARK STREET
+        indexnode.put("Victoria", 42);
+        indexnode.put("Kidderpore", 43);
+        indexnode.put("Mominpore", 44);
+        indexnode.put("Majerhat", 45);
+        indexnode.put("Taratala", 46);
+        indexnode.put("Behala Bazar", 47);
+        indexnode.put("Behala Chowrasta", 48);
+        indexnode.put("Sakherbazar", 49);
+        indexnode.put("Thakurpur", 50);
+        indexnode.put("Joka", 51);
+        indexnode.put("IIM", 52);
+        indexnode.put("Diamond Park", 53);
+        //END OF PURPLE LINE
+
+        //RED LINE
+        //NOAPARA
+        indexnode.put("Dum Dum Cant", 54);
+        indexnode.put("Jessore Road", 55);
+        indexnode.put("Biman Bandar", 56);
+        indexnode.put("Birati", 57);
+        indexnode.put("Michael Nagar", 58);
+        indexnode.put("New Barrackpur", 59);
+        indexnode.put("Madhyamgram", 60);
+        indexnode.put("Hridaypur", 61);
+        indexnode.put("Barasat", 62);
+        //END OF RED LINE
+
+        //PINK LINE
+        //BARANAGAR
+        indexnode.put("Kamarhati", 63);
+        indexnode.put("Agarpara", 64);
+        indexnode.put("Sodepur", 65);
+        indexnode.put("Panihati", 66);
+        indexnode.put("Subash Nagar", 67);
+        indexnode.put("Khardaha", 68);
+        indexnode.put("Tata Gate", 69);
+        indexnode.put("Titagarh", 70);
+        indexnode.put("Talpukur", 71);
+        indexnode.put("Barrackpore", 72);
+        //END OF PINK LINE
+
+        //ORANGE LINE
+        //KAVI SUBHASH
+        indexnode.put("Satyajit Ray", 73);
+        indexnode.put("Kavi Sukanta", 74);
+        indexnode.put("Jyotindra Nath Nandi", 75);
+        indexnode.put("Hemanta Mukhapadhyay", 76);
+        indexnode.put("Vip Bazar", 77);
+        indexnode.put("Ritwik Ghatak", 78);
+        indexnode.put("Barun Sengupta", 79);
+        indexnode.put("Beliaghata", 80);
+        indexnode.put("Gour Kishor Ghosh", 81);
+        indexnode.put("Nicco Park", 82);
+        //SALT LAKE SECTOR-V
+        indexnode.put("Technopolis", 83);
+        indexnode.put("Bidhan Nagar", 84);
+        indexnode.put("Sub Cbd 1", 85);
+        indexnode.put("Cbd 1", 86);
+        indexnode.put("Kalakhetra", 87);
+        indexnode.put("New Town", 88);
+        indexnode.put("Convention Centre", 89);
+        indexnode.put("Sub Cbd 2", 90);
+        indexnode.put("Titumir", 91);
+        indexnode.put("Rabindra Tirtha", 92);
+        //TELGHORIA
+        //BIMAN BANDAR
+        //END OF ORANGE LINE
+    }
+    void initialise(int V, int [][] graph){
         for(int i = 0; i < V; i++){
             for(int j = 0; j < V; j++){
                 displacement[i][j] = graph[i][j];
@@ -145,7 +270,7 @@ public class FloydWarshallService{
             }
         }
     }
-    static void floydWarshall(int V){
+    void floydWarshall(int V){
         for(int k = 0; k < V; k++){
             for(int i = 0; i < V; i++){
                 for(int j = 0; j < V; j++){
@@ -159,46 +284,23 @@ public class FloydWarshallService{
             }
         }
     }
-    static Vector<Integer> constructPath(int u, int v){
+    Vector<String> constructPath(int u, int v){
         if(nextnode[u][v] == -1){
             return null;
         }
-        Vector<Integer> path = new Vector<Integer>();
-        path.add(u);
+        Vector<String> path = new Vector<String>();
+        path.add(nodeindex.get(u));
         while(u != v){
             u = nextnode[u][v];
-            path.add(u);
+            path.add(nodeindex.get(u));
         }
         return path;
     }
-    static void printPath(Vector<Integer> path){
-        int n = path.size();
-        for(int i = 0; i < n - 1; i++){
-            System.out.print(nodeindex.get(path.get(i)) + " -> ");
-        }
-        System.out.print(nodeindex.get(path.get(n - 1)) + "\n");
-    }
-    static class pathData{
-        float avgspeed;
-        int nodecount;
-        int distance;
-        float time;
-        int fare;
-        Vector<Integer> path;
-        public pathData(float avgspeed, int nodecount, int distance, float time, int fare, Vector<Integer> path){
-            this.avgspeed = avgspeed;
-            this.nodecount = nodecount;
-            this.distance = distance;
-            this.time = time;
-            this.fare = fare;
-            this.path = path;
-        }
-    }
-    static pathData pathDetails(int u, int v){
-        Vector<Integer> path;
+    PathData pathDetails(int u, int v){
+        Vector<String> path;
         path = constructPath(u, v);
         int nodecount = path.size();
-        int distance = displacement[path.get(0)][path.get(path.size()-1)];
+        int distance = displacement[indexnode.get(path.get(0))][indexnode.get(path.get(path.size()-1))];
         final float avgspeed = 30.00f;
         float time = (float)distance / avgspeed * 60;
         int fare;
@@ -229,7 +331,7 @@ public class FloydWarshallService{
         else{
             fare = 40;
         }
-        return new pathData(avgspeed, nodecount, distance, time, fare, path);
+        return new PathData(avgspeed, nodecount, distance, time, fare, path);
     }
     public void firstrun(){
         HashMap<Integer, String> nodeindex = new HashMap<>();
@@ -331,14 +433,11 @@ public class FloydWarshallService{
         initialise(V, graph);
         floydWarshall(V);
     }
-    public void pathprint(int u, int v){
-        pathData p = pathDetails(u,v);
-        System.out.println("THE AVGERAGE SPEED IS : " + p.avgspeed + " KM/HR");
-        System.out.println("THE NUMBER OF STATIONS IN THE PATH IS : " + p.nodecount);
-        System.out.println("THE DISATANCE IS : " + p.distance + " KM");
-        System.out.println("THE TIME REQUIRED IS : " + p.time + " MIN");
-        System.out.println("THE FARE REQUIRED IS : " + p.fare + " RS");
-        System.out.println("THE CORRESPONDING PATH IS : ");
-        printPath(p.path);
+    public PathData pathprint(StationData stationData){
+        if((indexnode.containsKey(stationData.getStation1())) && (indexnode.containsKey(stationData.getStation1()))) {
+            return pathDetails(indexnode.get(stationData.getStation1()), indexnode.get(stationData.getStation2()));
+        }
+        PathData error = new PathData();
+        return error;
     }
 }

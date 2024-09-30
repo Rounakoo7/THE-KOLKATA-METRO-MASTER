@@ -1,7 +1,10 @@
 import React from 'react'
-
+import Cookies from 'universal-cookie'
+import LoginError from './LoginError';
 function About(props) {
-  return (
+  const cookies = new Cookies();
+
+  return (<>{cookies.get("jwt") === undefined? 
     <div className="container">
       <br /><br />
       <h1 className="my-3" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>About Us</h1>
@@ -44,7 +47,7 @@ function About(props) {
           </div>
         </div>
       </div>
-    </div>
+    </div>:<><LoginError mode={props.mode} removeJwt={props.removeJwt} /></>}</>
   )
 }
 

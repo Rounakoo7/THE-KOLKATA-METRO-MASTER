@@ -1,6 +1,10 @@
 import React from 'react'
+import LogoutError from './LogoutError';
+import Cookies from 'universal-cookie';
+
 function Userfare(props) {
-  return (
+  const cookies = new Cookies();
+  return (<>{cookies.get("jwt") !== undefined?
     <div>
     <br />
     <div className="container-sm" style={{ backgroundColor: props.mode === 'dark' ? '#495057' : 'white', maxWidth: "700px" }}>
@@ -63,7 +67,7 @@ function Userfare(props) {
     </div>
     <br />
     <br />
-  </div>
+  </div>:<><LogoutError mode={props.mode} /></>}</>
   )
 }
 

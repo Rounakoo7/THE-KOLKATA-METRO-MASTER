@@ -7,11 +7,12 @@ import lombok.Data;
 @Entity
 public class Users {
     @Id
-    @GeneratedValue
-    private int id;
-    private String name;
     private String phone;
+    @Column(nullable = false)
+    private String name;
+    @Column(nullable = false, unique = true)
     private String email;
+    @Column(nullable = false)
     private String password;
 
 }

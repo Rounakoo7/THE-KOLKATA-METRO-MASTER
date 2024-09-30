@@ -13,18 +13,18 @@ export default function Navbar(props) {
                     <div className="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                             <li className="nav-item">
-                                <Link className={`nav-link ${props.loggedin === 'yes' ? 'disabled' : location.pathname === "/" ? "active" : ""}`} aria-current="page" to="/">Home</Link>
+                                <Link className={`nav-link ${props.loggedin === true ? 'disabled' : location.pathname === "/" ? "active" : ""}`} aria-current="page" to="/">Home</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className={`nav-link ${props.loggedin === 'yes' ? 'disabled' : location.pathname === "/about" ? "active" : ""}`} to="/about">About</Link>
+                                <Link className={`nav-link ${props.loggedin === true ? 'disabled' : location.pathname === "/about" ? "active" : ""}`} to="/about">About</Link>
                             </li>
-                            {(props.loggedin === "no") &&
+                            {(props.loggedin === false) &&
                                 <><li className="nav-item">
-                                    <Link className={`nav-link ${props.loggedin === 'yes' ? 'disabled' : location.pathname === "/log-in" ? "active" : ""}`} to="/log-in">Log In</Link>
+                                    <Link className={`nav-link ${props.loggedin === true ? 'disabled' : location.pathname === "/log-in" ? "active" : ""}`} to="/log-in">Log In</Link>
                                 </li>
                                 </>
                             }
-                            {(props.loggedin === "yes") &&
+                            {(props.loggedin === true) &&
                                 <>
                                     <li className="nav-item">
                                         <Link className={`nav-link ${location.pathname === "/user" ? "active" : ""}`} to="/user">Map</Link>
@@ -36,7 +36,7 @@ export default function Navbar(props) {
                                         <Link className={`nav-link ${location.pathname === "/user-navigate" ? "active" : ""}`} to="/user-navigate">Navigate</Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link className="nav-link active" to="/" onClick={props.toggleLoggedIn}>Log Out</Link>
+                                        <Link className="nav-link active" to="/" onClick={props.removeJwt}>Log Out</Link>
                                     </li>
                                 </>
                             }

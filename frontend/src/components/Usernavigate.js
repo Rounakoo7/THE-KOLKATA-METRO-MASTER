@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react'
+import axios from './Axios';
+import Cookies from 'universal-cookie';
 import { useNavigate } from 'react-router-dom'
 import Linesandstations from './Linesandstations';
 import "react-step-progress-bar/styles.css";
 import { ProgressBar, Step } from "react-step-progress-bar";
 import Spancounter from './Spancounter'
+import { toast } from 'react-toastify';
+import LogoutError from './LogoutError';
+
 function Usernavigate(props) {
+  const cookies = new Cookies();
   const stations = [
     { id: "1", lineId: "1", name: "Shahid Khudiram" },
     { id: "2", lineId: "1", name: "Gitanjali" },
@@ -162,28 +168,47 @@ function Usernavigate(props) {
       })
     }
   }
-  const handleSubmit = event => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if((formData.station1 !== "Station") && (formData.station2 !== "Station") && (lbool1 !== "Line1") && (lbool2 !== "Line2")){
       console.log(formData);
+      try {
+        const config = {
+          headers: { "Authorization": `Bearer ${cookies.get('jwt')}`, },
+        };
+        const response = await axios.post("/fw",formData,config);
+        console.log(response);
+        if (response.status === 201){
+          toast.success("Logged in successfully");
+        }
+        else {
+          const errorData = await response.json()
+          toast.error(errorData.message);
+        }
+      }
+      catch(error) {
+        if (error.message.substring(error.message.length - 3,error.message.length) === "401"){
+          toast.error("Unauthorized");
+        } 
+        else if (error.message.substring(error.message.length - 3,error.message.length) === "400"){
+          toast.error("Search fields are wrong");
+        }
+        else {
+          toast.error("Server error. Please try again later");
+        }
+      }
     }
     else{
-      props.showAlert("Search fields are empty", "danger");
+      toast.error("Search fields are empty");
     }
-    try {
-      //const response = await fetch("http://localhost:8080/") 
-    } catch (error) {
-
-    }
-    //navigate("/user");toggle()
   }
-  return (
+  return (<>{cookies.get("jwt") !== undefined?
     <div>
       <br />
       <div className="container-sm" style={{ backgroundColor: props.mode === 'dark' ? '#495057' : 'white', maxWidth: "1500px" }}>
         <h1 align="center" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>Navigate</h1>
         <br />
-        <form className="row g-3" onSubmit={handleSubmit}>
+        <form className="row g-3" style={{ color: props.mode === 'dark' ? 'white' : 'black' }} onSubmit={handleSubmit}>
           <div className="col-6">
             <label style={{ paddingBottom: "20px" }}>Select Source Station</label>
             <Linesandstations mode={props.mode} name="station1" handleInputChange={handleInputChange} handleline={handleline} />
@@ -195,12 +220,12 @@ function Usernavigate(props) {
           <div className="col-12">
             <button type="submit" className="btn btn-primary" >Search</button>
             <span style={{ paddingLeft: "10px" }}></span>
-            <button type="submit" className="btn btn-danger" onClick={() => navigate("/user")}>Back</button>
+            <button type="submit" className="btn btn-danger" onClick={() => navigate("/..")}>Back</button>
           </div>
         </form>
         <br />
         <br />
-        <div style={{ overflow: "scroll", maxWidth: "1500px", paddingLeft: "50px", border: "1px solid black" }}>
+        <div style={{ overflow: "scroll", maxWidth: "1500px", paddingLeft: "50px", border: "1px solid black", backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white' }}>
           <br />
           <br />
           <ProgressBar percent={counter} filledBackground="linear-gradient(to right, #fefb72, #fefb72)">
@@ -242,7 +267,7 @@ function Usernavigate(props) {
         <div className="row g-2">
           <div className="col-6">
             <div className="table-responsive" style={{ backgroundColor: props.mode === 'dark' ? '#495057' : 'white', maxWidth: "700px", maxHeight: "400px" }}>
-              <table className={`table table-striped ${props.mode === 'dark' ? 'table-dark' : ''} table-hover table-bordered`}>
+              <table className={`table table-striped table-hover table-bordered`}>
                 <thead>
                   <tr>
                     <th scope="col">Sl No.</th>
@@ -293,7 +318,7 @@ function Usernavigate(props) {
           <div className="col-6">
             <div className="container text-center">
               <div className="row g-2">
-                <div className="col-12" style={{ paddingTop: "40px" }}>
+                <div className="col-12" style={{ paddingTop: "40px", color: props.mode === 'dark' ? 'white' : 'black' }}>
                   <h3>The Average Speed is <Spancounter start="0" end="30" durationinseconds="3" /> Kilometers/Hour</h3>
                 </div>
                 <div className="col-6" style={{ paddingTop: "10px" }}>
@@ -315,7 +340,7 @@ function Usernavigate(props) {
       </div>
       <br />
       <br />
-    </div>
+    </div>:<><LogoutError mode={props.mode} /></>}</>
   )
 }
 
