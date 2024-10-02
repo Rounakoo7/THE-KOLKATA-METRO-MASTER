@@ -23,7 +23,7 @@ public class Users {
     private String email;
     @Column(nullable = false)
     private String password;
-    @OneToMany(cascade = {CascadeType.ALL}, targetEntity = Tickets.class)
+    @OneToMany(cascade = {CascadeType.ALL}, targetEntity = Tickets.class, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumn(name = "users_phone", referencedColumnName = "phone")
     private List<Tickets> tickets = new ArrayList<>();
 }
