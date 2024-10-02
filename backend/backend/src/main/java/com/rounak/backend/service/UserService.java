@@ -28,7 +28,6 @@ public class UserService {
     public String register(Users user){
         user.setPassword(encoder.encode(user.getPassword()));
         if((repo.findByPhone(user.getPhone()) == null) && (repo.findByEmail(user.getEmail()) == null)) {
-            System.out.println(true);
             repo.save(user);
             return "CREATED";
         }

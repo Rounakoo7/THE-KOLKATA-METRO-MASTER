@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from './Axios';
 import Cookies from 'universal-cookie';
-import { useNavigate } from 'react-router-dom'
 import Linesandstations from './Linesandstations';
 import "react-step-progress-bar/styles.css";
 import { ProgressBar, Step } from "react-step-progress-bar";
@@ -122,14 +121,15 @@ function Usernavigate(props) {
     6 : "#ff6500",
     7 : "grey",
   }
-  const navigate = useNavigate();
   const [counter, setCounter] = useState(0);
   const startCounter = () => {
     if (counter <= 99) {
       setTimeout(() => {
         setCounter(counter + 1);
-      }, 2/nodecount);
+      }, 4/nodecount);
     }
+  }
+  const handleBack = () => {
   }
   const search = (property_value, array) => {
     return array.filter((x) => x.id === property_value)[0].name;
@@ -205,7 +205,7 @@ function Usernavigate(props) {
         const config = {
           headers: { "Authorization": `Bearer ${cookies.get('jwt')}`, },
         };
-        const response = await axios.post("/fw",formData,config);
+        const response = await axios.post("/findpath",formData,config);
         if (response.status === 201){
           toggleProgress(10);
           setAvgspeed(response.data.avgspeed);
@@ -248,7 +248,7 @@ function Usernavigate(props) {
       <div className="container-sm" style={{ backgroundColor: props.mode === 'dark' ? '#495057' : 'white', maxWidth: "1500px" }}>
         <h1 align="center" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>Navigate</h1>
         <br />
-        <form className="row g-3" style={{ color: props.mode === 'dark' ? 'white' : 'black' }} onSubmit={handleSubmit}>
+        {nodecount !== 0?<></>:<><form className="row g-3" style={{ color: props.mode === 'dark' ? 'white' : 'black' }} onSubmit={handleSubmit}>
           <div className="col-6">
             <label style={{ paddingBottom: "20px" }}>Select Source Station</label>
             <Linesandstations mode={props.mode} name="station1" handleInputChange={handleInputChange} handleline={handleline} />
@@ -259,12 +259,8 @@ function Usernavigate(props) {
           </div>
           <div className="col-12">
             <button type="submit" className="btn btn-primary" >Search</button>
-            <span style={{ paddingLeft: "10px" }}></span>
-            <button type="submit" className="btn btn-danger" onClick={() => navigate("/..")}>Back</button>
           </div>
-        </form>
-        <br />
-        <br />
+        </form></>}
         {nodecount === 0?<></>:<>{startCounter()}
         <div style={{ overflow: "scroll", maxWidth: "1500px", paddingLeft: "70px",  paddingRight: "70px",border: "1px solid black", backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white' }}>
           <br />
@@ -357,7 +353,12 @@ function Usernavigate(props) {
               </div>
             </div>
           </div>
-        </div></>}
+        </div>
+        <form className="row g-3" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>
+          <div className="col-12">
+            <button type="submit" className="btn btn-danger" onClick={handleBack()} >Back</button>
+          </div>
+        </form></>}
       </div>
       <br />
       <br />

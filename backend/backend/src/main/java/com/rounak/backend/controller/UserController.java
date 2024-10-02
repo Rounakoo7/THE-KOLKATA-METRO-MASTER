@@ -24,10 +24,10 @@ public class UserController {
         String httpStatus = service.register(user);
         ResponseEntity<Users> response;
         if(httpStatus.equals("CREATED")){
-            response = new ResponseEntity<Users>(user, HttpStatus.CREATED);
+            response = new ResponseEntity<>(user, HttpStatus.CREATED);
         }
         else{
-            response = new ResponseEntity<Users>(HttpStatus.BAD_REQUEST);
+            response = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return response;
     }
