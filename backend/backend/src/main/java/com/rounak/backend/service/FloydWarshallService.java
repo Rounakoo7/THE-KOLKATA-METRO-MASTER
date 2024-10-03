@@ -288,7 +288,7 @@ public class FloydWarshallService{
         if(nextnode[u][v] == -1){
             return null;
         }
-        Vector<String> path = new Vector<String>();
+        Vector<String> path = new Vector<>();
         path.add(nodeindex.get(u));
         while(u != v){
             u = nextnode[u][v];
@@ -302,7 +302,7 @@ public class FloydWarshallService{
         int nodecount = path.size();
         int distance = displacement[indexnode.get(path.get(0))][indexnode.get(path.get(path.size()-1))];
         final float avgspeed = 30.00f;
-        float time = (float)distance / avgspeed * 60;
+        long time = (long)(distance / avgspeed * 60);
         int fare;
         if(distance == 0){
             fare = 0;
@@ -434,10 +434,39 @@ public class FloydWarshallService{
         floydWarshall(V);
     }
     public PathData pathprint(StationData stationData){
-        if((indexnode.containsKey(stationData.getStation1())) && (indexnode.containsKey(stationData.getStation1()))) {
+        if((indexnode.containsKey(stationData.getStation1())) && (indexnode.containsKey(stationData.getStation2()))) {
             return pathDetails(indexnode.get(stationData.getStation1()), indexnode.get(stationData.getStation2()));
         }
-        PathData error = new PathData();
-        return error;
+        return new PathData();
+    }
+
+    public Vector<String> interchangepathprint(Vector<String> path) {
+        int size = path.size();
+        for(int i = 0; i < size; i++){
+            if((!path.get(i).equals("Kavi Subhash")) && (!path.get(i).equals("Park Street")) && (!path.get(i).equals("Esplanade")) && (!path.get(i).equals("Noapara")) && (!path.get(i).equals("Baranagar")) && (!path.get(i).equals("Salt Lake Sector-V")) && (!path.get(i).equals("Teghoria")) && (!path.get(i).equals("Biman Bandar"))){
+                path.remove(i);
+                i--;
+                size--;
+            }
+        }
+        if(path.isEmpty()){
+            path.add("NULL");
+        }
+        return path;
+    }
+
+    public String interchangepathtostring(Vector<String> interchangePath) {
+        StringBuilder s = new StringBuilder();
+        int size = interchangePath.size();
+        if((size == 1) && (interchangePath.getFirst().equals("NULL"))){
+            s.append("NULL");
+            return s.toString();
+        }
+        for(int i = 0; i < size - 1; i++){
+            s.append(interchangePath.get(i));
+            s.append(',');
+        }
+        s.append(interchangePath.get(size - 1));
+        return s.toString();
     }
 }

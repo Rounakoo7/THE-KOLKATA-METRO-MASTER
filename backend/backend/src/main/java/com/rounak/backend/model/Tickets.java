@@ -30,4 +30,6 @@ public class Tickets {
     private LocalDateTime booking_time;
     @Column(nullable = false)
     private LocalDateTime expiry_time;
+    @Column(nullable = false)
+    private String interchange_path;
 }

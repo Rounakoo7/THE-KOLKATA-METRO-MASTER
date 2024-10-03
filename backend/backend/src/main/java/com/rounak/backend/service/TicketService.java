@@ -1,5 +1,6 @@
 package com.rounak.backend.service;
 
+import com.rounak.backend.model.StationData;
 import com.rounak.backend.model.TicketData;
 import com.rounak.backend.model.Tickets;
 import com.rounak.backend.model.Users;
@@ -28,7 +29,10 @@ public class TicketService {
     private UserRepo repo;
 
     @Autowired
-    private JWTService service;
+    private JWTService service1;
+
+    @Autowired
+    private FloydWarshallService service2;
 
     @Transactional
     public String saveTicket(TicketData tickets, HttpServletRequest request) {
@@ -36,7 +40,7 @@ public class TicketService {
         String token;
         String phone = null;
         token = authHeader.substring(7);
-        phone = service.extractPhone(token);
+        phone = service1.extractPhone(token);
         if(!phone.equals(tickets.getPhone())){
             return "UNAUTHORIZED";
         }
@@ -57,6 +61,7 @@ public class TicketService {
             ticket.setExpiry_time(booking_time.plusSeconds(tickets.getDuration()));
             ticket.setStation1(tickets.getStation1());
             ticket.setStation2(tickets.getStation2());
+            ticket.setInterchange_path(service2.interchangepathtostring(tickets.getInterchange_path()));
             user.getTickets().add(ticket);
             repo.save(user);
             return "CREATED";
@@ -72,7 +77,7 @@ public class TicketService {
         String token;
         String phone = null;
         token = authHeader.substring(7);
-        phone = service.extractPhone(token);
+        phone = service1.extractPhone(token);
         Users user = repo.findByPhone(phone);
         List<Tickets> tickets = user.getTickets();
         int size = tickets.size();

@@ -8,11 +8,11 @@ public class PathData {
     private float avgspeed;
     private int nodecount;
     private int distance;
-    private float time;
+    private long time;
     private int fare;
     private Vector<String> path;
     private Boolean notexists;
-    public PathData(float avgspeed, int nodecount, int distance, float time, int fare, Vector<String> path) {
+    public PathData(float avgspeed, int nodecount, int distance, long time, int fare, Vector<String> path) {
         this.avgspeed = avgspeed;
         this.nodecount = nodecount;
         this.distance = distance;
