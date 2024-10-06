@@ -325,7 +325,7 @@ function Userbookticket(props) {
                         <div className="card mb-3 container-sm" style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', maxWidth: "900px", paddingTop: "30px", paddingBottom: "10px" }}>
                             <div className="row g-0">
                                 <div className="col-md-4" style={{ paddingLeft: "5px", paddingTop: "45px", paddingBottom: "10px", paddingRight: "15px", borderRight: `1px solid ${props.mode === 'dark' ? 'white' : 'black'}`, color: props.mode === 'dark' ? 'white' : 'black' }}>
-                                    <h6 className="card-title"><FaPhoneAlt /> User Phone : {phone}</h6>
+                                    <h6 className="card-title" ><FaPhoneAlt /> User Phone : {phone}</h6>
                                     <br />
                                     <h5 className="card-title"><IoPeople /> Passengers : {passengers}</h5>
                                     <h5 className="card-title"><RiMoneyRupeeCircleFill /> Fare : {fare} rupees</h5>
