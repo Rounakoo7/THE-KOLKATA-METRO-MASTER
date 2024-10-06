@@ -9,6 +9,8 @@ import User from './components/User';
 import Signup from './components/Signup';
 import Usernavigate from './components/Usernavigate';
 import Userfare from './components/Userfare';
+import Userbookticket from './components/Userbookticket';
+import Usertickets from './components/Usertickets';
 import LoginError from './components/LoginError';
 import LoadingBar from 'react-top-loading-bar';
 import {
@@ -104,6 +106,20 @@ function App() {
       element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={true} removeJwt={removeJwt} />
         <LoadingBar color='blue' progress={progress} onLoaderFinished={() => setProgress(0)} />
         <Userfare mode={mode} toggleProgress={toggleProgress} />
+      </>,
+    },
+    {
+      path: "/book-ticket",
+      element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={true} removeJwt={removeJwt} />
+        <LoadingBar color='blue' progress={progress} onLoaderFinished={() => setProgress(0)} />
+        <Userbookticket mode={mode} toggleProgress={toggleProgress} />
+      </>,
+    },
+    {
+      path: "/user-tickets",
+      element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={true} removeJwt={removeJwt} />
+        <LoadingBar color='blue' progress={progress} onLoaderFinished={() => setProgress(0)} />
+        <Usertickets mode={mode} toggleProgress={toggleProgress} />
       </>,
     },
   ]);

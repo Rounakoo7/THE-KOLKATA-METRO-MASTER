@@ -7,6 +7,7 @@ import { ProgressBar, Step } from "react-step-progress-bar";
 import Spancounter from './Spancounter'
 import { toast } from 'react-toastify';
 import LogoutError from './LogoutError';
+import { useNavigate } from 'react-router-dom';
 
 function Usernavigate(props) {
   const toggleProgress = props.toggleProgress
@@ -113,23 +114,33 @@ function Usernavigate(props) {
     { id: "93", lineId: "7", name: "Biman Bandar" },
   ]
   var stationcolour = {
-    1 : "blue",
-    2 : "#1de11d",
-    3 : "#b806b8",
-    4 : "red",
-    5 : "#fb0793",
-    6 : "#ff6500",
-    7 : "grey",
+    1: "blue",
+    2: "#1de11d",
+    3: "#b806b8",
+    4: "red",
+    5: "#fb0793",
+    6: "#ff6500",
+    7: "grey",
   }
   const [counter, setCounter] = useState(0);
   const startCounter = () => {
     if (counter <= 99) {
       setTimeout(() => {
         setCounter(counter + 1);
-      }, 4/nodecount);
+      }, 4 / nodecount);
     }
   }
-  const handleBack = () => {
+  const navigate = useNavigate();
+  const handleBack = (event) => {
+    event.preventDefault();
+    setAvgspeed(0.00);
+    setNodecount(0);
+    setDistance(0);
+    setTime(0.00);
+    setFare(0);
+    setPath([]);
+    setCounter(0);
+    navigate("/user-navigate");
   }
   const search = (property_value, array) => {
     return array.filter((x) => x.id === property_value)[0].name;
@@ -137,7 +148,7 @@ function Usernavigate(props) {
   const [lbool1, setLbool1] = useState("");
   const [lbool2, setLbool2] = useState("");
   const handleline = (e) => {
-    if(e === "Line1"){
+    if (e === "Line1") {
       setLbool1(e);
       setFormData(formData => {
         return {
@@ -146,7 +157,7 @@ function Usernavigate(props) {
         }
       })
     }
-    else if(e === "Line2"){
+    else if (e === "Line2") {
       setLbool2(e);
       setFormData(formData => {
         return {
@@ -155,7 +166,7 @@ function Usernavigate(props) {
         }
       })
     }
-    else{
+    else {
       setLbool1(e);
       setLbool2(e);
     }
@@ -167,7 +178,7 @@ function Usernavigate(props) {
   });
   const handleInputChange = event => {
     const { target: { name, value } } = event;
-   if(value === "Station"){
+    if (value === "Station") {
       setFormData(formData => {
         return {
           ...formData,
@@ -175,7 +186,7 @@ function Usernavigate(props) {
         }
       })
     }
-    else{
+    else {
       setFormData(formData => {
         return {
           ...formData,
@@ -192,63 +203,63 @@ function Usernavigate(props) {
   const [path, setPath] = useState([]);
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if((formData.station1 !== "Station") && (formData.station2 !== "Station") && (lbool1 !== "Line1") && (lbool2 !== "Line2")){
-      if(formData.station1 !== formData.station2){
-      setAvgspeed(0.00);
-      setNodecount(0);
-      setDistance(0);
-      setTime(0.00);
-      setFare(0);
-      setPath([]);
-      setCounter(0);
-      try {
-        const config = {
-          headers: { "Authorization": `Bearer ${cookies.get('jwt')}`, },
-        };
-        const response = await axios.post("/findpath",formData,config);
-        if (response.status === 201){
-          toggleProgress(10);
-          setAvgspeed(response.data.avgspeed);
-          setNodecount(response.data.nodecount);
-          setDistance(response.data.distance);
-          setTime(response.data.time);
-          setFare(response.data.fare);
-          toggleProgress(70);
-          setPath(response.data.path);
-          toggleProgress(100);
+    if ((formData.station1 !== "Station") && (formData.station2 !== "Station") && (lbool1 !== "Line1") && (lbool2 !== "Line2")) {
+      if (formData.station1 !== formData.station2) {
+        setAvgspeed(0.00);
+        setNodecount(0);
+        setDistance(0);
+        setTime(0.00);
+        setFare(0);
+        setPath([]);
+        setCounter(0);
+        try {
+          const config = {
+            headers: { "Authorization": `Bearer ${cookies.get('jwt')}`, },
+          };
+          const response = await axios.post("/findpath", formData, config);
+          if (response.status === 201) {
+            toggleProgress(10);
+            setAvgspeed(response.data.avgspeed);
+            setNodecount(response.data.nodecount);
+            setDistance(response.data.distance);
+            setTime(response.data.time);
+            setFare(response.data.fare);
+            toggleProgress(70);
+            setPath(response.data.path);
+            toggleProgress(100);
+          }
+          else {
+            const errorData = await response.json()
+            toast.error(errorData.message);
+          }
         }
-        else {
-          const errorData = await response.json()
-          toast.error(errorData.message);
+        catch (error) {
+          if (error.message.substring(error.message.length - 3, error.message.length) === "401") {
+            toast.error("Unauthorized");
+          }
+          else if (error.message.substring(error.message.length - 3, error.message.length) === "400") {
+            toast.error("Search fields are wrong");
+          }
+          else {
+            toast.error("Server error. Please try again later");
+          }
         }
       }
-      catch(error) {
-        if (error.message.substring(error.message.length - 3,error.message.length) === "401"){
-          toast.error("Unauthorized");
-        } 
-        else if (error.message.substring(error.message.length - 3,error.message.length) === "400"){
-          toast.error("Search fields are wrong");
-        }
-        else {
-          toast.error("Server error. Please try again later");
-        }
-      }
-      }
-      else{
-        toast.error("Search fields are same");  
+      else {
+        toast.error("Search fields are same");
       }
     }
-    else{
+    else {
       toast.error("Search fields are empty");
     }
   }
-  return (<>{cookies.get("jwt") !== undefined?
+  return (<>{cookies.get("jwt") !== undefined ?
     <div>
       <br />
       <div className="container-sm" style={{ backgroundColor: props.mode === 'dark' ? '#495057' : 'white', maxWidth: "1500px" }}>
         <h1 align="center" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>Navigate</h1>
         <br />
-        {nodecount !== 0?<></>:<><form className="row g-3" style={{ color: props.mode === 'dark' ? 'white' : 'black' }} onSubmit={handleSubmit}>
+        {nodecount !== 0 ? <></> : <><form className="row g-3" style={{ color: props.mode === 'dark' ? 'white' : 'black' }} onSubmit={handleSubmit}>
           <div className="col-6">
             <label style={{ paddingBottom: "20px" }}>Select Source Station</label>
             <Linesandstations mode={props.mode} name="station1" handleInputChange={handleInputChange} handleline={handleline} />
@@ -261,108 +272,109 @@ function Usernavigate(props) {
             <button type="submit" className="btn btn-primary" >Search</button>
           </div>
         </form></>}
-        {nodecount === 0?<></>:<>{startCounter()}
-        <div style={{ overflow: "scroll", maxWidth: "1500px", paddingLeft: "70px",  paddingRight: "70px",border: "1px solid black", backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white' }}>
-          <br />
-          <br />
-          <ProgressBar percent={counter} filledBackground="linear-gradient(to right, #fefb72, #fefb72)" width={`${nodecount*200}px`}>
-            {path.map( (st, index) => {
-                  return (
-                    <Step transition="scale">
-                      {({ accomplished }) => (
-                        <span className="badge rounded-pill text" style={{ filter: `grayscale(${accomplished ? 0: (index === (nodecount - 1) ? 0: 100)}%)`, backgroundColor: `${stationcolour[stations.find((station) => (station.name === st)).lineId]}` }}>{st}</span>
-                      )}
-                    </Step>
-                  )
+        {nodecount === 0 ? <></> : <>{startCounter()}
+          <div style={{ overflow: "scroll", maxWidth: "1500px", paddingLeft: "70px", paddingRight: "70px", border: "1px solid black", backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white' }}>
+            <br />
+            <br />
+            <ProgressBar percent={counter} filledBackground="linear-gradient(to right, #fefb72, #fefb72)" width={`${nodecount * 200}px`}>
+              {path.map((st, index) => {
+                return (
+                  <Step transition="scale">
+                    {({ accomplished }) => (
+                      <span className="badge rounded-pill text" style={{ filter: `grayscale(${accomplished ? 0 : (index === (nodecount - 1) ? 0 : 100)}%)`, backgroundColor: `${stationcolour[stations.find((station) => (station.name === st)).lineId]}` }}>{st}</span>
+                    )}
+                  </Step>
+                )
               })
-            }
-          </ProgressBar>
-          <br />
-          <br />
-        </div>
-        <br />
-        <div className="row g-2">
-          <div className="col-6">
-            <div className="table-responsive" style={{ backgroundColor: props.mode === 'dark' ? '#495057' : 'white', maxWidth: "700px", maxHeight: "400px" }}>
-              <table className={`table table-striped table-hover table-bordered`}>
-                <thead>
-                  <tr>
-                    <th scope="col">Sl No.</th>
-                    <th scope="col">Colour</th>
-                    <th scope="col">Line</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <th scope="row">1</th>
-                    <td style={{ backgroundColor: "blue" }}></td>
-                    <td>Blue</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td style={{ backgroundColor: "#1de11d" }}></td>
-                    <td>Green</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td style={{ backgroundColor: "#b806b8" }}></td>
-                    <td>Purple</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">4</th>
-                    <td style={{ backgroundColor: "red" }}></td>
-                    <td>Red</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">5</th>
-                    <td style={{ backgroundColor: "#fb0793" }}></td>
-                    <td>Pink</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">6</th>
-                    <td style={{ backgroundColor: "#ff6500" }}></td>
-                    <td>Orange</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">7</th>
-                    <td style={{ backgroundColor: "grey" }}></td>
-                    <td>Interchange</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+              }
+            </ProgressBar>
+            <br />
+            <br />
           </div>
-          <div className="col-6">
-            <div className="container text-center">
-              <div className="row g-2">
-                <div className="col-12" style={{ paddingTop: "40px", color: props.mode === 'dark' ? 'white' : 'black' }}>
-                  <h3>The Average Speed is <Spancounter start="0" end={`${avgspeed}`} durationinseconds="0.1" /> Kilometers/Hour</h3>
-                </div>
-                <div className="col-6" style={{ paddingTop: "10px" }}>
-                  <div className="p-3" style={{ backgroundColor: "#d088f8", border: "1px solid #3a0c3a" }}><Spancounter start="0" end={`${nodecount}`} durationinseconds="0.1" /> Stations</div>
-                </div>
-                <div className="col-6" style={{ paddingTop: "10px" }}>
-                  <div className="p-3" style={{ backgroundColor: "#d088f8", border: "1px solid #3a0c3a" }} ><Spancounter start="0" end={`${distance}`} durationinseconds="0.1" /> Kilometers</div>
-                </div>
-                <div className="col-6" style={{ paddingTop: "10px" }}>
-                  <div className="p-3" style={{ backgroundColor: "#d088f8", border: "1px solid #3a0c3a" }} ><Spancounter start="0" end={`${time}`} durationinseconds="0.1" /> Minutes</div>
-                </div>
-                <div className="col-6" style={{ paddingTop: "10px" }}>
-                  <div className="p-3" style={{ backgroundColor: "#d088f8", border: "1px solid #3a0c3a" }} ><Spancounter start="0" end={`${fare}`} durationinseconds="0.1" /> Rupees</div>
+          <br />
+          <div className="row g-2">
+            <div className="col-6">
+              <div className="table-responsive" style={{ backgroundColor: props.mode === 'dark' ? '#495057' : 'white', maxWidth: "700px", maxHeight: "400px" }}>
+                <table className={`table table-striped table-hover table-bordered`}>
+                  <thead>
+                    <tr>
+                      <th scope="col">Sl No.</th>
+                      <th scope="col">Colour</th>
+                      <th scope="col">Line</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">1</th>
+                      <td style={{ backgroundColor: "blue" }}></td>
+                      <td>Blue</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">2</th>
+                      <td style={{ backgroundColor: "#1de11d" }}></td>
+                      <td>Green</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">3</th>
+                      <td style={{ backgroundColor: "#b806b8" }}></td>
+                      <td>Purple</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">4</th>
+                      <td style={{ backgroundColor: "red" }}></td>
+                      <td>Red</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">5</th>
+                      <td style={{ backgroundColor: "#fb0793" }}></td>
+                      <td>Pink</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">6</th>
+                      <td style={{ backgroundColor: "#ff6500" }}></td>
+                      <td>Orange</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">7</th>
+                      <td style={{ backgroundColor: "grey" }}></td>
+                      <td>Interchange</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div className="col-6">
+              <div className="container text-center">
+                <div className="row g-2">
+                  <div className="col-12" style={{ paddingTop: "40px", color: props.mode === 'dark' ? 'white' : 'black' }}>
+                    <h3>The Average Speed is <Spancounter start="0" end={`${avgspeed}`} durationinseconds="0.1" /> Kilometers/Hour</h3>
+                  </div>
+                  <div className="col-6" style={{ paddingTop: "10px" }}>
+                    <div className="p-3" style={{ backgroundColor: "#d088f8", border: "1px solid #3a0c3a" }}><Spancounter start="0" end={`${nodecount}`} durationinseconds="0.1" /> Stations</div>
+                  </div>
+                  <div className="col-6" style={{ paddingTop: "10px" }}>
+                    <div className="p-3" style={{ backgroundColor: "#d088f8", border: "1px solid #3a0c3a" }} ><Spancounter start="0" end={`${distance}`} durationinseconds="0.1" /> Kilometers</div>
+                  </div>
+                  <div className="col-6" style={{ paddingTop: "10px" }}>
+                    <div className="p-3" style={{ backgroundColor: "#d088f8", border: "1px solid #3a0c3a" }} ><Spancounter start="0" end={`${time}`} durationinseconds="0.1" /> Minutes</div>
+                  </div>
+                  <div className="col-6" style={{ paddingTop: "10px" }}>
+                    <div className="p-3" style={{ backgroundColor: "#d088f8", border: "1px solid #3a0c3a" }} ><Spancounter start="0" end={`${fare}`} durationinseconds="0.1" /> Rupees</div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <form className="row g-3" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>
-          <div className="col-12">
-            <button type="submit" className="btn btn-danger" onClick={handleBack()} >Back</button>
-          </div>
-        </form></>}
+          <form className="row g-3" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>
+            <div className="col-12">
+              <button type="submit" className="btn btn-danger" value="back" onClick={handleBack} >Back</button>
+            </div>
+          </form></>}
+          <br />
       </div>
       <br />
       <br />
-    </div>:<><LogoutError mode={props.mode} /></>}</>
+    </div> : <><LogoutError mode={props.mode} /></>}</>
   )
 }
 

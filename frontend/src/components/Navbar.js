@@ -36,6 +36,12 @@ export default function Navbar(props) {
                                         <Link className={`nav-link ${location.pathname === "/user-navigate" ? "active" : ""}`} to="/user-navigate">Navigate</Link>
                                     </li>
                                     <li className="nav-item">
+                                        <Link className={`nav-link ${location.pathname === "/book-ticket" ? "active" : ""}`} to="/book-ticket">Book Ticket</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className={`nav-link ${location.pathname === "/user-tickets" ? "active" : ""}`} to="/user-tickets">My Tickets</Link>
+                                    </li>
+                                    <li className="nav-item">
                                         <Link className="nav-link active" to="/" onClick={props.removeJwt}>Log Out</Link>
                                     </li>
                                 </>
