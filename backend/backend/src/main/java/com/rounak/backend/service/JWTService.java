@@ -1,9 +1,11 @@
 package com.rounak.backend.service;
 
+import com.rounak.backend.logout.BlackList;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,11 @@ import java.util.function.Function;
 
 @Service
 public class JWTService {
+
+    @Autowired
+    private BlackList blackList;
+
+
     private String secretkey = "";
     public JWTService() {
         try {
@@ -67,7 +74,7 @@ public class JWTService {
 
     public boolean validateToken(String token, UserDetails userDetails) {
         final String phone = extractPhone(token);
-        return (phone.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        return (phone.equals(userDetails.getUsername()) && !isTokenExpired(token) && !blackList.isBlackListed(token));
     }
 
     private boolean isTokenExpired(String token) {

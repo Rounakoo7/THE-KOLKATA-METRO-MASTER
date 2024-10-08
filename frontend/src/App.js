@@ -21,6 +21,7 @@ import "./index.css";
 import "./App.css";
 import { toast } from 'react-toastify';
 import Cookies from 'universal-cookie';
+
 function App() {
   const [progress, setProgress] = useState(0)
   const toggleProgress = (p) => {
@@ -52,6 +53,7 @@ function App() {
   const removeJwt = () => {
     toggleProgress(10);
     cookies.remove("jwt");
+    toast.success("Logged out successfully")
     toggleProgress(20);
     toggleProgress(100);
   }
@@ -61,63 +63,63 @@ function App() {
     },
     {
       path: "/",
-      element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={false} />
+      element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={false} toggleProgress={toggleProgress} />
         <LoadingBar color='blue' progress={progress} onLoaderFinished={() => setProgress(0)} />
-        <div id="body" style={{ backgroundImage: 'url("/homepage-img.jpg")', backgroundPosition: "center", backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundAttachment: "fixed", height: "100vh" }}><>{cookies.get("jwt") === undefined?<></>:<><LoginError mode={mode} removeJwt={removeJwt} /></>}</></div>
+        <div id="body" style={{ backgroundImage: 'url("/homepage-img.jpg")', backgroundPosition: "center", backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundAttachment: "fixed", height: "100vh" }}><>{cookies.get("jwt") === undefined?<></>:<><LoginError mode={mode} removeJwt={removeJwt} toggleProgress={toggleProgress} /></>}</></div>
       </>,
     },
     {
       path: "/about",
-      element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={false} />
+      element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={false} toggleProgress={toggleProgress} />
         <LoadingBar color='blue' progress={progress} onLoaderFinished={() => setProgress(0)} />
         <About mode={mode} removeJwt={removeJwt} toggleProgress={toggleProgress} />
       </>,
     },
     {
       path: "/log-in",
-      element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={false} />
+      element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={false} toggleProgress={toggleProgress} />
         <LoadingBar color='blue' progress={progress} onLoaderFinished={() => setProgress(0)} />
         <div id="body" style={{ backgroundImage: 'url("/homepage-img.jpg")', backgroundPosition: "center", backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundAttachment: "fixed", height: "100vh" }}><Login mode={mode} removeJwt={removeJwt} toggleProgress={toggleProgress} /></div>
       </>,
     },
     {
       path: "/sign-up",
-      element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={false} />
+      element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={false} toggleProgress={toggleProgress} />
         <LoadingBar color='blue' progress={progress} onLoaderFinished={() => setProgress(0)} />
         <div id="body" style={{ backgroundImage: 'url("/homepage-img.jpg")', backgroundPosition: "center", backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundAttachment: "fixed", height: "100vh" }}><Signup mode={mode} removeJwt={removeJwt} toggleProgress={toggleProgress} /></div>
       </>,
     },
     {
       path: "/user",
-      element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={true} removeJwt={removeJwt} />
+      element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={true} removeJwt={removeJwt} toggleProgress={toggleProgress} />
         <LoadingBar color='blue' progress={progress} onLoaderFinished={() => setProgress(0)} />
         <User mode={mode} toggleProgress={toggleProgress} />
       </>,
     },
     {
       path: "/user-navigate",
-      element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={true} removeJwt={removeJwt} />
+      element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={true} removeJwt={removeJwt} toggleProgress={toggleProgress} />
         <LoadingBar color='blue' progress={progress} onLoaderFinished={() => setProgress(0)} />
         <Usernavigate mode={mode} toggleProgress={toggleProgress} />
       </>,
     },
     {
       path: "/user-fare",
-      element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={true} removeJwt={removeJwt} />
+      element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={true} removeJwt={removeJwt} toggleProgress={toggleProgress} />
         <LoadingBar color='blue' progress={progress} onLoaderFinished={() => setProgress(0)} />
         <Userfare mode={mode} toggleProgress={toggleProgress} />
       </>,
     },
     {
       path: "/book-ticket",
-      element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={true} removeJwt={removeJwt} />
+      element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={true} removeJwt={removeJwt} toggleProgress={toggleProgress} />
         <LoadingBar color='blue' progress={progress} onLoaderFinished={() => setProgress(0)} />
         <Userbookticket mode={mode} toggleProgress={toggleProgress} />
       </>,
     },
     {
       path: "/user-tickets",
-      element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={true} removeJwt={removeJwt} />
+      element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={true} removeJwt={removeJwt} toggleProgress={toggleProgress} />
         <LoadingBar color='blue' progress={progress} onLoaderFinished={() => setProgress(0)} />
         <Usertickets mode={mode} toggleProgress={toggleProgress} />
       </>,

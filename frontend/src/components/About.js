@@ -54,7 +54,7 @@ function About(props) {
           </div>
         </div>
       </div>
-    </div>:<><LoginError mode={props.mode} removeJwt={props.removeJwt} /></>}</>
+    </div>:<><LoginError mode={props.mode} removeJwt={props.removeJwt} toggleProgress={props.toggleProgress}/></>}</>
   )
 }
 

@@ -1,7 +1,49 @@
 import React from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { toast } from 'react-toastify';
+import axios from './Axios';
+import { Link, useLocation, useNavigate } from 'react-router-dom'
+import Cookies from 'universal-cookie';
 export default function Navbar(props) {
+    const navigate = useNavigate();
     let location = useLocation();
+    const toggleProgress = props.toggleProgress
+    const removeJwt = props.removeJwt;
+    const cookies = new Cookies();
+    const handleLogout = async (event) => {
+        event.preventDefault();
+        try {
+            const config = {
+                headers: { "Authorization": `Bearer ${cookies.get('jwt')}`, },
+            };
+            const data = {
+                jwt: `${cookies.get('jwt')}`
+            }
+            const response = await axios.post("/log-out", data, config);
+            if (response.status === 200) {
+                toggleProgress(10);
+                removeJwt();
+                navigate("/");
+                toggleProgress(40);
+                toggleProgress(100);
+            }
+            else {
+                const errorData = await response.json()
+                toast.error(errorData.message);
+            }
+        }
+        catch (error) {
+            if (error.message.substring(error.message.length - 3, error.message.length) === "401") {
+                toggleProgress(10);
+                removeJwt();
+                navigate("/");
+                toggleProgress(40);
+                toggleProgress(100);
+            }
+            else {
+                toast.error("Server error. Please try again later");
+            }
+        }
+    }
     return (
         <div style={{ height: "58px" }}>
             <nav className={`navbar fixed-top navbar-expand-lg navbar-${props.mode} bg-${props.mode}`} style={{ borderBottom: "2px solid var(--bs-gray-500)" }}>
@@ -42,7 +84,7 @@ export default function Navbar(props) {
                                         <Link className={`nav-link ${location.pathname === "/user-tickets" ? "active" : ""}`} to="/user-tickets">My Tickets</Link>
                                     </li>
                                     <li className="nav-item">
-                                        <Link className="nav-link active" to="/" onClick={props.removeJwt}>Log Out</Link>
+                                        <Link className="nav-link active" to="/" onClick={handleLogout}>Log Out</Link>
                                     </li>
                                 </>
                             }

@@ -138,7 +138,7 @@ function Signup(props) {
       </div>
       <br />
       <br />
-    </div>:<><LoginError mode={props.mode} removeJwt={props.removeJwt} /></>}</>
+    </div>:<><LoginError mode={props.mode} removeJwt={props.removeJwt} toggleProgress={props.toggleProgress} /></>}</>
   )
 }
 

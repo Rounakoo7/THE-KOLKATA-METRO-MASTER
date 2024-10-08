@@ -2,6 +2,7 @@ package com.rounak.backend.service;
 
 import com.rounak.backend.model.Users;
 import com.rounak.backend.repo.UserRepo;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,15 +21,15 @@ public class UserService {
     AuthenticationManager authManager;
 
     @Autowired
-    private UserRepo repo;
+    private UserRepo repo1;
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
     @Transactional
     public String register(Users user){
         user.setPassword(encoder.encode(user.getPassword()));
-        if((repo.findByPhone(user.getPhone()) == null) && (repo.findByEmail(user.getEmail()) == null)) {
-            repo.save(user);
+        if((repo1.findByPhone(user.getPhone()) == null) && (repo1.findByEmail(user.getEmail()) == null)) {
+            repo1.save(user);
             return "CREATED";
         }
         else{
