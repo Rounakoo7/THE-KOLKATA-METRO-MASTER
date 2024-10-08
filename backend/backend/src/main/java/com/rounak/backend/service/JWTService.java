@@ -1,6 +1,6 @@
 package com.rounak.backend.service;
 
-import com.rounak.backend.logout.BlackList;
+import com.rounak.backend.repo.DeauthenticatedJwtRepo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -22,8 +22,7 @@ import java.util.function.Function;
 public class JWTService {
 
     @Autowired
-    private BlackList blackList;
-
+    private DeauthenticatedJwtRepo repo;
 
     private String secretkey = "";
     public JWTService() {
@@ -43,7 +42,7 @@ public class JWTService {
                 .add(claims)
                 .subject(phone)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                .expiration(new Date(System.currentTimeMillis() + 1 * 60 * 1000))
                 .and()
                 .signWith(getKey())
                 .compact();
@@ -74,10 +73,10 @@ public class JWTService {
 
     public boolean validateToken(String token, UserDetails userDetails) {
         final String phone = extractPhone(token);
-        return (phone.equals(userDetails.getUsername()) && !isTokenExpired(token) && !blackList.isBlackListed(token));
+        return (phone.equals(userDetails.getUsername()) && !isTokenExpired(token) && (repo.findByJwt(token) == null));
     }
 
-    private boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
