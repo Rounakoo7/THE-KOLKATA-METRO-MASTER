@@ -5,9 +5,10 @@ import com.rounak.backend.model.Tickets;
 import com.rounak.backend.model.Users;
 import com.rounak.backend.repo.DeauthenticatedJwtRepo;
 import com.rounak.backend.repo.UserRepo;
-import com.rounak.backend.service.JWTService;
-import com.rounak.backend.service.TicketService;
+import com.rounak.backend.service.*;
+import com.rounak.backend.util.EmailUtil;
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -26,13 +27,13 @@ import java.util.List;
 public class SchedulerConfig {
 
     @Autowired
-    private DeauthenticatedJwtRepo repo;
-
-    @Autowired
     private TicketService service1;
 
     @Autowired
     private JWTService service2;
+
+    @Autowired
+    private UserService service3;
 
     @Scheduled(fixedDelay = 3600000)
     public void deleteExpiredTickets() throws InterruptedException{
@@ -41,13 +42,11 @@ public class SchedulerConfig {
 
     @Scheduled(fixedDelay = 3600000)
     public void deleteExpiredBlackList() throws InterruptedException{
-        List<DeauthenticatedJwts> deauthenticatedJwts = repo.findAll();
-        for (DeauthenticatedJwts deauthenticatedJwt : deauthenticatedJwts) {
-            try {
-                service2.isTokenExpired(deauthenticatedJwt.getJwt());
-            } catch (ExpiredJwtException e) {
-                repo.delete(deauthenticatedJwt);
-            }
-        }
+        service2.scheduledDelete();
+    }
+
+    @Scheduled(fixedDelay = 3600000)
+    public void deleteUnverifiedExpiredUsers() throws MessagingException {
+        service3.scheduledDelete();
     }
 }

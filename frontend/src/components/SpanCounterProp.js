@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
-function Spancounter(props) {
+function SpancounterProp(props) {
+    const propCounter = props.setCounter;
     const inc = ((+props.end) - (+props.start)) / (+props.durationinseconds * 1000);
     var add = 1;
     if (inc > 1) {
@@ -17,20 +18,24 @@ function Spancounter(props) {
             if (counter < +props.end) {
                 setTimeout(() => {
                     setCounter(counter + Math.ceil(add));
+                    propCounter(counter + Math.ceil(add));
                 }, addtimes);
             }
             else {
                 setCounter(+props.end);
+                propCounter(+props.end);
             }
         }
         else{
             if (counter > +props.end) {
                 setTimeout(() => {
                     setCounter(counter - Math.ceil(add));
+                    propCounter(counter - Math.ceil(add));
                 }, addtimes);
             }
             else {
                 setCounter(+props.end);
+                propCounter(+props.end);
             }
         }
     }, [counter])
@@ -40,4 +45,4 @@ function Spancounter(props) {
 }
 
 
-export default Spancounter
+export default SpancounterProp

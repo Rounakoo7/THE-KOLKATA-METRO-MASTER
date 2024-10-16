@@ -1,21 +1,21 @@
 package com.rounak.backend.service;
 
+import com.rounak.backend.model.DeauthenticatedJwts;
 import com.rounak.backend.repo.DeauthenticatedJwtRepo;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 @Service
@@ -84,4 +84,15 @@ public class JWTService {
         return extractClaim(token, Claims::getExpiration);
     }
 
+    @Transactional
+    public void scheduledDelete() {
+        List<DeauthenticatedJwts> deauthenticatedJwts = repo.findAll();
+        for (DeauthenticatedJwts deauthenticatedJwt : deauthenticatedJwts) {
+            try {
+                isTokenExpired(deauthenticatedJwt.getJwt());
+            } catch (ExpiredJwtException e) {
+                repo.delete(deauthenticatedJwt);
+            }
+        }
+    }
 }
