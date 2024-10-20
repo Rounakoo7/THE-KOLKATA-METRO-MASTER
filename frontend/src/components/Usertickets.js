@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from './Axios';
 import Cookies from 'universal-cookie';
-import "react-step-progress-bar/styles.css";
 import { toast } from 'react-toastify';
 import LogoutError from './LogoutError';
 import { FaTrainSubway } from "react-icons/fa6";

@@ -5,8 +5,10 @@ import Navbar from './components/Navbar';
 import About from './components/About';
 import Error from './components/Error';
 import Login from './components/Login';
-import User from './components/User';
+import Forgotpassword from './components/Forgotpassword';
 import Signup from './components/Signup';
+import Userprofile from './components/Userprofile';
+import Usermap from './components/Usermap';
 import Usernavigate from './components/Usernavigate';
 import Userfare from './components/Userfare';
 import Userbookticket from './components/Userbookticket';
@@ -83,6 +85,13 @@ function App() {
       </>,
     },
     {
+      path: "/forgot-password",
+      element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={false} toggleProgress={toggleProgress} />
+        <LoadingBar color='blue' progress={progress} onLoaderFinished={() => setProgress(0)} />
+        <div id="body" style={{ backgroundImage: 'url("/homepage-img.jpg")', backgroundPosition: "center", backgroundRepeat: "no-repeat", backgroundSize: "cover", backgroundAttachment: "fixed", height: "100vh" }}><Forgotpassword mode={mode} removeJwt={removeJwt} toggleProgress={toggleProgress} /></div>
+      </>,
+    },
+    {
       path: "/sign-up",
       element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={false} toggleProgress={toggleProgress} />
         <LoadingBar color='blue' progress={progress} onLoaderFinished={() => setProgress(0)} />
@@ -90,10 +99,17 @@ function App() {
       </>,
     },
     {
-      path: "/user",
+      path: "/user-profile",
       element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={true} removeJwt={removeJwt} toggleProgress={toggleProgress} />
         <LoadingBar color='blue' progress={progress} onLoaderFinished={() => setProgress(0)} />
-        <User mode={mode} toggleProgress={toggleProgress} />
+        <Userprofile mode={mode}  removeJwt={removeJwt} toggleProgress={toggleProgress} />
+      </>,
+    },
+    {
+      path: "/user-map",
+      element: <><Navbar mode={mode} toggleMode={toggleMode} loggedin={true} removeJwt={removeJwt} toggleProgress={toggleProgress} />
+        <LoadingBar color='blue' progress={progress} onLoaderFinished={() => setProgress(0)} />
+        <Usermap mode={mode} toggleProgress={toggleProgress} />
       </>,
     },
     {

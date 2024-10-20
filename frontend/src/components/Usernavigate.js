@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import axios from './Axios';
 import Cookies from 'universal-cookie';
 import Linesandstations from './Linesandstations';
-import "react-step-progress-bar/styles.css";
 import { ProgressBar, Step } from "react-step-progress-bar";
 import Spancounter from './Spancounter'
 import { toast } from 'react-toastify';

@@ -52,7 +52,7 @@ function Login(props) {
         const decoded = jwtDecode(response.data);
         toggleProgress(20);
         cookies.set("jwt",response.data, {expires: new Date(decoded.exp *1000),});
-        navigate("/user");    
+        navigate("/user-profile");    
         toast.success("Logged in successfully");
       }
       else {
@@ -93,6 +93,7 @@ function Login(props) {
           </div>
           <div className="col-12">
             <button type="submit" className="btn btn-primary">Log In</button>
+            <Link style={{ color: "white", paddingLeft: "15px" }} to="/forgot-password">Forgot password</Link>
             <Link style={{ color: "white", paddingLeft: "15px" }} to="/sign-up">Not an user? Sign up</Link>
           </div>
         </form>

@@ -137,7 +137,7 @@ function Signup(props) {
         toast.error("Some error occured. Please retry registration");
       }
       else if (error.message.substring(error.message.length - 3, error.message.length) === "401") {
-        toast.error("One or both of the OTPs are Invalid or expired");
+        toast.error("One or both of the OTPs are invalid or expired");
       }
       else {
         toast.error("Server error. Please try again later");
@@ -188,7 +188,7 @@ function Signup(props) {
             <input type="text" className="form-control input white-placeholder" name="email_otp" style={{ backgroundColor: "transparent", border: "none", borderBottom: "2px solid #ffffff", color: "#ffffff" }} placeholder="OTP received on Email" value={otpData.email_otp} onChange={handleInputChange2} required />
           </div>
           <div className="col-12">
-            <button type="submit" className="btn btn-primary" onClick={handleSubmit2}>Verify and register</button>
+            <button type="submit" className="btn btn-primary" onClick={handleSubmit2}>Verify and Register</button>
             <span style={{ paddingLeft: "10px" }}></span>
             {counter === 0 ? <><button type="submit" className="btn" style={{ backgroundColor: "rgb(19 203 19)", color: "white" }} onClick={handleSubmit3}>Resend OTP</button></> : <></>}
             {counter === 0 ? <></> : <><h7 class="card-subtitle mb-2" style={{ color: "#04f704" }}>Resend OTP in <SpancounterProp start="30" end="0" durationinseconds="30" setCounter={setCounter} /> Seconds</h7></>}

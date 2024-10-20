@@ -32,16 +32,11 @@ export default function Navbar(props) {
             }
         }
         catch (error) {
-            if (error.message.substring(error.message.length - 3, error.message.length) === "401") {
-                toggleProgress(10);
-                removeJwt();
-                navigate("/");
-                toggleProgress(40);
-                toggleProgress(100);
-            }
-            else {
-                toast.error("Server error. Please try again later");
-            }
+            toggleProgress(10);
+            removeJwt();
+            navigate("/");
+            toggleProgress(40);
+            toggleProgress(100);
         }
     }
     return (
@@ -69,7 +64,10 @@ export default function Navbar(props) {
                             {(props.loggedin === true) &&
                                 <>
                                     <li className="nav-item">
-                                        <Link className={`nav-link ${location.pathname === "/user" ? "active" : ""}`} to="/user">Map</Link>
+                                        <Link className={`nav-link ${location.pathname === "/user-profile" ? "active" : ""}`} to="/user-profile">Profile</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className={`nav-link ${location.pathname === "/user-map" ? "active" : ""}`} to="/user-map">Map</Link>
                                     </li>
                                     <li className="nav-item">
                                         <Link className={`nav-link ${location.pathname === "/user-fare" ? "active" : ""}`} to="/user-fare">Fare Details</Link>
