@@ -340,7 +340,7 @@ function Userbookticket(props) {
                                         <h5 className="card-title"><FaTrainSubway /> Destination Station : {station2}</h5>
                                         <form className="row g-3" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>
                                         <div style={{ paddingTop: "40px" }}>
-                                            <button type="submit" className="btn btn-primary" value="payment" onClick={handleSubmit2}>Make Payment</button>
+                                            <button type="submit" className="btn btn-primary" value="payment" onClick={handleSubmit2}>Confirm</button>
                                             <span style={{ paddingLeft: "10px" }}></span>
                                             <button type="submit" className="btn btn-danger" value="back" onClick={handleBack}>Back</button>
                                         </div>
