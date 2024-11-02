@@ -467,11 +467,11 @@ function Userprofile(props) {
                     <br />
                     <form className="row g-3" style={{ color: props.mode === 'dark' ? 'white' : 'black' }} >
                         <div className="col-md-12">
-                            <input type="text" className={`form-control input ${props.mode === 'dark' ? "white-placeholder" : ""}`} style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white' }} name="phone" placeholder="New Phone Number" value={formData11.phone} onChange={handleInputChange11} required />
+                            <input type="text" className={`form-control input ${props.mode === 'dark' ? "white-placeholder" : ""}`} style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black' }} name="phone" placeholder="New Phone Number" value={formData11.phone} onChange={handleInputChange11} required />
                         </div>
                         <div className="col-md-12">
                             <div className="input-group flex-nowrap">
-                                <input type={type} className={`form-control input ${props.mode === 'dark' ? "white-placeholder" : ""}`} name="password" style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white' }} placeholder="Password" value={formData11.password} onChange={handleInputChange11} autoComplete="current-password" required />
+                                <input type={type} className={`form-control input ${props.mode === 'dark' ? "white-placeholder" : ""}`} name="password" style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black' }} placeholder="Password" value={formData11.password} onChange={handleInputChange11} autoComplete="current-password" required />
                                 <span class="input-group-text" id="addon-wrapping" onClick={handleToggle}>
                                     <Icon class="absolute mr-10" icon={icon} size={25} />
                                 </span>
@@ -493,7 +493,7 @@ function Userprofile(props) {
                     <br />
                     <form className="row g-3" style={{ color: props.mode === 'dark' ? 'white' : 'black' }} >
                         <div className="col-md-12">
-                            <input type="text" className={`form-control input ${props.mode === 'dark' ? "white-placeholder" : ""}`} style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white' }} name="otp" placeholder="OTP received on new Phone" value={formData12.otp} onChange={handleInputChange12} required />
+                            <input type="text" className={`form-control input ${props.mode === 'dark' ? "white-placeholder" : ""}`} style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black' }} name="otp" placeholder="OTP received on new Phone" value={formData12.otp} onChange={handleInputChange12} required />
                         </div>
                         <div className="col-12">
                             <button type="submit" className="btn btn-primary" value="update" onClick={handleSubmit12}>Update</button>
@@ -515,11 +515,11 @@ function Userprofile(props) {
                     <br />
                     <form className="row g-3" style={{ color: props.mode === 'dark' ? 'white' : 'black' }} >
                         <div className="col-md-12">
-                            <input type="text" className={`form-control input ${props.mode === 'dark' ? "white-placeholder" : ""}`} style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white' }} name="email" placeholder="New Email ID" value={formData21.email} onChange={handleInputChange21} required />
+                            <input type="text" className={`form-control input ${props.mode === 'dark' ? "white-placeholder" : ""}`} style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black' }} name="email" placeholder="New Email ID" value={formData21.email} onChange={handleInputChange21} required />
                         </div>
                         <div className="col-md-12">
                             <div className="input-group flex-nowrap">
-                                <input type={type} className={`form-control input ${props.mode === 'dark' ? "white-placeholder" : ""}`} name="password" style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white' }} placeholder="Password" value={formData21.password} onChange={handleInputChange21} autoComplete="current-password" required />
+                                <input type={type} className={`form-control input ${props.mode === 'dark' ? "white-placeholder" : ""}`} name="password" style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black' }} placeholder="Password" value={formData21.password} onChange={handleInputChange21} autoComplete="current-password" required />
                                 <span class="input-group-text" id="addon-wrapping" onClick={handleToggle}>
                                     <Icon class="absolute mr-10" icon={icon} size={25} />
                                 </span>
@@ -541,7 +541,7 @@ function Userprofile(props) {
                     <br />
                     <form className="row g-3" style={{ color: props.mode === 'dark' ? 'white' : 'black' }} >
                         <div className="col-md-12">
-                            <input type="text" className={`form-control input ${props.mode === 'dark' ? "white-placeholder" : ""}`} style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white' }} name="otp" placeholder="OTP received on new Email" value={formData22.otp} onChange={handleInputChange22} required />
+                            <input type="text" className={`form-control input ${props.mode === 'dark' ? "white-placeholder" : ""}`} style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black' }} name="otp" placeholder="OTP received on new Email" value={formData22.otp} onChange={handleInputChange22} required />
                         </div>
                         <div className="col-12">
                             <button type="submit" className="btn btn-primary" value="update" onClick={handleSubmit22}>Update</button>
@@ -564,7 +564,7 @@ function Userprofile(props) {
                     <form className="row g-3" style={{ color: props.mode === 'dark' ? 'white' : 'black' }} >
                         <div className="col-md-12">
                             <div className="input-group flex-nowrap">
-                                <input type={type} className={`form-control input ${props.mode === 'dark' ? "white-placeholder" : ""}`} name="password" style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white' }} placeholder="Password" value={formData3.password} onChange={handleInputChange3} autoComplete="current-password" required />
+                                <input type={type} className={`form-control input ${props.mode === 'dark' ? "white-placeholder" : ""}`} name="password" style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black' }} placeholder="Password" value={formData3.password} onChange={handleInputChange3} autoComplete="current-password" required />
                                 <span class="input-group-text" id="addon-wrapping" onClick={handleToggle}>
                                     <Icon class="absolute mr-10" icon={icon} size={25} />
                                 </span>
