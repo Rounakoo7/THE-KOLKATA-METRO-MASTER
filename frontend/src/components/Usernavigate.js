@@ -7,9 +7,16 @@ import Spancounter from './Spancounter'
 import { toast } from 'react-toastify';
 import LogoutError from './LogoutError';
 import { useNavigate } from 'react-router-dom';
+import ContentLoader from 'react-content-loader'
 
 function Usernavigate(props) {
+  const [contentLoader, setContentLoader] = useState(0);
   const toggleProgress = props.toggleProgress
+  function timeoutAndRefresh(delay) {
+    setTimeout(() => {
+      navigate(0);
+    }, delay)
+  }
   useEffect(() => {
     toggleProgress(70);
     toggleProgress(100);
@@ -215,8 +222,10 @@ function Usernavigate(props) {
           const config = {
             headers: { "Authorization": `Bearer ${cookies.get('jwt')}`, },
           };
+          setContentLoader(1);
           const response = await axios.post("/findpath", formData, config);
           if (response.status === 201) {
+            setContentLoader(0);
             toggleProgress(10);
             setAvgspeed(response.data.avgspeed);
             setNodecount(response.data.nodecount);
@@ -233,6 +242,7 @@ function Usernavigate(props) {
           }
         }
         catch (error) {
+          timeoutAndRefresh(3000);
           if (error.message.substring(error.message.length - 3, error.message.length) === "401") {
             toast.error("Unauthorized");
           }
@@ -256,9 +266,9 @@ function Usernavigate(props) {
     <div>
       <br />
       <div className="container-sm" style={{ backgroundColor: props.mode === 'dark' ? '#495057' : 'white', maxWidth: "1500px" }}>
-        <h1 align="center" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>Navigate</h1>
-        <br />
-        {nodecount !== 0 ? <></> : <><form className="row g-3" style={{ color: props.mode === 'dark' ? 'white' : 'black' }} onSubmit={handleSubmit}>
+        {(nodecount !== 0) || (contentLoader === 1) ? <></> : <><form className="row g-3" style={{ color: props.mode === 'dark' ? 'white' : 'black' }} onSubmit={handleSubmit}>
+          <h1 align="center" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>Navigate</h1>
+          <br />
           <div className="col-6">
             <label style={{ paddingBottom: "20px" }}>Select Source Station</label>
             <Linesandstations mode={props.mode} name="station1" handleInputChange={handleInputChange} handleline={handleline} />
@@ -271,7 +281,9 @@ function Usernavigate(props) {
             <button type="submit" className="btn btn-primary" >Search</button>
           </div>
         </form></>}
-        {nodecount === 0 ? <></> : <>{startCounter()}
+        {(nodecount === 0) || (contentLoader === 1) ? <></> : <>{startCounter()}
+          <h1 align="center" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>Navigate</h1>
+          <br />
           <div style={{ overflow: "scroll", maxWidth: "1500px", paddingLeft: "70px", paddingRight: "70px", border: "1px solid black", backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white' }}>
             <br />
             <br />
@@ -369,7 +381,22 @@ function Usernavigate(props) {
               <button type="submit" className="btn btn-danger" value="back" onClick={handleBack} >Back</button>
             </div>
           </form></>}
+        {contentLoader === 1 ? <>
           <br />
+          <br />
+          <br />
+          <ContentLoader
+            speed={2}
+            width={1500}
+            height={160}
+            viewBox="0 0 400 160"
+            backgroundColor={`${props.mode === 'dark' ? "black" : "#f3f3f3"}`}
+            foregroundColor="grey"
+            {...props}
+          ></ContentLoader>
+          <br />
+        </> : <></>}
+        <br />
       </div>
       <br />
       <br />

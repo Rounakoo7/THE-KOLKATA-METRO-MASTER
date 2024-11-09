@@ -13,9 +13,12 @@ import { eye } from 'react-icons-kit/feather/eye'
 import { jwtDecode } from 'jwt-decode';
 import "react-step-progress-bar/styles.css";
 import SpancounterProp from './SpanCounterProp';
-
+import { TailSpin } from 'react-loader-spinner'
+import ContentLoader from 'react-content-loader'
 
 function Userprofile(props) {
+    const [loader, setLoader] = useState(0);
+    const [contentLoader, setContentLoader] = useState(1);
     const [counter1, setCounter1] = useState(30);
     const [counter2, setCounter2] = useState(30);
     const [response, setResponse] = useState([])
@@ -24,6 +27,11 @@ function Userprofile(props) {
     const removeJwt = props.removeJwt;
     const [type, setType] = useState('password');
     const [icon, setIcon] = useState(eyeOff);
+    function timeoutAndRefresh(delay) {
+        setTimeout(() => {
+            navigate(0);
+        }, delay)
+    }
     const handleToggle = () => {
         if (type === 'password') {
             setIcon(eye);
@@ -42,6 +50,7 @@ function Userprofile(props) {
             };
             const response = await axios.get("/getuser", config);
             if (response.status === 200) {
+                setContentLoader(0);
                 setResponse(response.data)
             }
             else {
@@ -101,8 +110,10 @@ function Userprofile(props) {
             const config = {
                 headers: { "Authorization": `Bearer ${cookies.get('jwt')}`, },
             };
+            setLoader(1);
             const response = await axios.put("/changephone", formData11, config);
             if (response.status === 200) {
+                setLoader(0);
                 toggleProgress(10);
                 toggleProgress(40);
                 toast.success("An OTP has been sent to the new Phone Number for verification");
@@ -115,6 +126,7 @@ function Userprofile(props) {
             }
         }
         catch (error) {
+            timeoutAndRefresh(3000);
             if (error.message.substring(error.message.length - 3, error.message.length) === "401") {
                 formData11.password = "";
                 toast.error("Invalid password");
@@ -144,6 +156,7 @@ function Userprofile(props) {
             const config = {
                 headers: { "Authorization": `Bearer ${cookies.get('jwt')}`, },
             };
+            setLoader(1);
             const response = await axios.put("/verifychangephone", formData12, config);
             if (response.status === 200) {
                 toggleProgress(10);
@@ -153,8 +166,7 @@ function Userprofile(props) {
                 formData11.phone = "";
                 formData11.password = "";
                 formData12.otp = "";
-                setVerify(0);
-                navigate(0);
+                timeoutAndRefresh(3000);
                 toast.success("Phone Number changed successfully");
                 toggleProgress(100);
             }
@@ -164,6 +176,7 @@ function Userprofile(props) {
             }
         }
         catch (error) {
+            setLoader(0);
             if (error.message.substring(error.message.length - 3, error.message.length) === "401") {
                 formData12.otp = "";
                 toast.error("The OTP is invalid or expired");
@@ -194,8 +207,10 @@ function Userprofile(props) {
             const config = {
                 headers: { "Authorization": `Bearer ${cookies.get('jwt')}`, },
             };
+            setLoader(1);
             const response = await axios.put("/changephone", formData11, config);
             if (response.status === 200) {
+                setLoader(0);
                 setCounter1(30);
                 toast.success("An OTP has been sent to the new Phone Number for verification");
             }
@@ -205,14 +220,13 @@ function Userprofile(props) {
             }
         }
         catch (error) {
+            timeoutAndRefresh(3000);
             if (error.message.substring(error.message.length - 3, error.message.length) === "401") {
                 setVerify(11);
-                navigate("/user-profile");
                 toast.error("Some error occured. Please retry Phone Number change");
             }
             else if (error.message.substring(error.message.length - 3, error.message.length) === "400") {
                 setVerify(11);
-                navigate("/user-profile");
                 toast.error("Some error occured. Please retry Phone Number change");
             }
             else {
@@ -257,8 +271,10 @@ function Userprofile(props) {
             const config = {
                 headers: { "Authorization": `Bearer ${cookies.get('jwt')}`, },
             };
+            setLoader(1);
             const response = await axios.put("/changeemail", formData21, config);
             if (response.status === 200) {
+                setLoader(0);
                 toggleProgress(10);
                 toggleProgress(40);
                 toast.success("An OTP has been sent to the new Email ID for verification");
@@ -271,6 +287,7 @@ function Userprofile(props) {
             }
         }
         catch (error) {
+            timeoutAndRefresh(3000);
             if (error.message.substring(error.message.length - 3, error.message.length) === "401") {
                 formData21.password = "";
                 toast.error("Invalid password");
@@ -300,6 +317,7 @@ function Userprofile(props) {
             const config = {
                 headers: { "Authorization": `Bearer ${cookies.get('jwt')}`, },
             };
+            setLoader(1);
             const response = await axios.put("/verifychangeemail", formData22, config);
             if (response.status === 200) {
                 toggleProgress(10);
@@ -307,8 +325,7 @@ function Userprofile(props) {
                 formData21.email = "";
                 formData11.password = "";
                 formData22.otp = "";
-                setVerify(0);
-                navigate(0);
+                timeoutAndRefresh(3000);
                 toast.success("Email ID changed successfully");
                 toggleProgress(100);
             }
@@ -318,6 +335,7 @@ function Userprofile(props) {
             }
         }
         catch (error) {
+            setLoader(0);
             if (error.message.substring(error.message.length - 3, error.message.length) === "401") {
                 formData22.otp = "";
                 toast.error("The OTP is invalid or expired");
@@ -348,8 +366,10 @@ function Userprofile(props) {
             const config = {
                 headers: { "Authorization": `Bearer ${cookies.get('jwt')}`, },
             };
+            setLoader(1);
             const response = await axios.put("/changeemail", formData21, config);
             if (response.status === 200) {
+                setLoader(0);
                 toggleProgress(10);
                 toggleProgress(40);
                 toast.success("An OTP has been sent to the new Email ID for verification");
@@ -361,6 +381,7 @@ function Userprofile(props) {
             }
         }
         catch (error) {
+            timeoutAndRefresh(3000);
             if (error.message.substring(error.message.length - 3, error.message.length) === "401") {
                 setVerify(21);
                 navigate("/user-profile");
@@ -400,14 +421,15 @@ function Userprofile(props) {
             const config = {
                 headers: { "Authorization": `Bearer ${cookies.get('jwt')}`, },
             };
+            setLoader(1);
             const response = await axios.post("/deleteuser", formData3, config);
             if (response.status === 200) {
+                setLoader(0);
                 toggleProgress(10);
                 toggleProgress(40);
-                toast.success("Account deactivated");
-                setVerify(0);
-                removeJwt();
                 navigate("/");
+                toast.success("Account deactivated");
+                removeJwt();
             }
             else {
                 const errorText = await response.text();
@@ -415,6 +437,7 @@ function Userprofile(props) {
             }
         }
         catch (error) {
+            timeoutAndRefresh(3000);
             if (error.message.substring(error.message.length - 3, error.message.length) === "401") {
                 toast.error("Invalid password");
             }
@@ -435,7 +458,7 @@ function Userprofile(props) {
     return (<>{cookies.get("jwt") !== undefined ?
         <div style={{ paddingTop: "10px" }}>
             <br />
-            {verify === 0 ? <><h1 align="center" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>My Profile</h1>
+            {(verify === 0) && (contentLoader === 0) ? <><h1 align="center" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>My Profile</h1>
                 <div className="card mb-3 container-sm" style={{ backgroundColor: props.mode === 'dark' ? '#495057' : 'white', maxWidth: "800px", paddingTop: "30px", paddingBottom: "30px" }}>
                     <div className="row g-0">
                         <div className="col-md-4" style={{ paddingLeft: "5px", paddingTop: "45px", paddingBottom: "100px", paddingRight: "20px", borderRight: `1px solid ${props.mode === 'dark' ? 'white' : 'black'}`, color: props.mode === 'dark' ? 'white' : 'black' }}>
@@ -461,7 +484,34 @@ function Userprofile(props) {
                         </div>
                     </div>
                 </div></> : <></>}
-            {verify === 11 ? <>
+            {contentLoader === 1 ? <>
+                <div className="card mb-3 container-sm" style={{ backgroundColor: props.mode === 'dark' ? '#495057' : 'white', maxWidth: "800px", paddingTop: "30px", paddingBottom: "30px" }}>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <ContentLoader
+                        speed={2}
+                        width={800}
+                        height={160}
+                        viewBox="0 0 400 160"
+                        backgroundColor={`${props.mode === 'dark' ? "black" : "#f3f3f3"}`}
+                        foregroundColor="grey"
+                        {...props}
+                    ></ContentLoader>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                </div>
+            </> : <></>
+            }
+            {(verify === 11) && (loader === 0) ? <>
                 <div className="card mb-3 container-sm" style={{ backgroundColor: props.mode === 'dark' ? '#495057' : 'white', maxWidth: "800px", paddingTop: "30px", paddingBottom: "30px" }}>
                     <h1 align="center" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>Update Phone Number</h1>
                     <br />
@@ -487,7 +537,7 @@ function Userprofile(props) {
                 </div>
                 <br />
                 <br /></> : <></>}
-            {verify === 12 ? <>
+            {(verify === 12) && (loader === 0) ? <>
                 <div className="card mb-3 container-sm" style={{ backgroundColor: props.mode === 'dark' ? '#495057' : 'white', maxWidth: "800px", paddingTop: "30px", paddingBottom: "30px" }}>
                     <h1 align="center" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>Update Phone Number</h1>
                     <br />
@@ -509,7 +559,7 @@ function Userprofile(props) {
                 </div>
                 <br />
                 <br /></> : <></>}
-            {verify === 21 ? <>
+            {(verify === 21) && (loader === 0) ? <>
                 <div className="card mb-3 container-sm" style={{ backgroundColor: props.mode === 'dark' ? '#495057' : 'white', maxWidth: "800px", paddingTop: "30px", paddingBottom: "30px" }}>
                     <h1 align="center" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>Update Email ID</h1>
                     <br />
@@ -535,7 +585,7 @@ function Userprofile(props) {
                 </div>
                 <br />
                 <br /></> : <></>}
-            {verify === 22 ? <>
+            {(verify === 22) && (loader === 0) ? <>
                 <div className="card mb-3 container-sm" style={{ backgroundColor: props.mode === 'dark' ? '#495057' : 'white', maxWidth: "800px", paddingTop: "30px", paddingBottom: "30px" }}>
                     <h1 align="center" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>Update Email ID</h1>
                     <br />
@@ -557,7 +607,7 @@ function Userprofile(props) {
                 </div>
                 <br />
                 <br /></> : <></>}
-            {verify === 3 ? <>
+            {(verify === 3) && (loader === 0) ? <>
                 <div className="card mb-3 container-sm" style={{ backgroundColor: props.mode === 'dark' ? '#495057' : 'white', maxWidth: "800px", paddingTop: "30px", paddingBottom: "30px" }}>
                     <h1 align="center" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>Deactivate Account</h1>
                     <br />
@@ -580,6 +630,27 @@ function Userprofile(props) {
                 </div>
                 <br />
                 <br /></> : <></>}
+            {loader !== 1 ? <></> : <>
+                <div className="card mb-3 container-sm" style={{ backgroundColor: props.mode === 'dark' ? '#495057' : 'white', maxWidth: "800px", paddingTop: "30px", paddingBottom: "30px" }}>
+                    <br />
+                    <br />
+                    <br />
+                    <TailSpin
+                        visible={true}
+                        height="80"
+                        width="950"
+                        color="#05fb08"
+                        ariaLabel="tail-spin-loading"
+                        radius="1"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                    />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                </div>
+            </>}
         </div> : <><LogoutError mode={props.mode} /></>}</>
     )
 }

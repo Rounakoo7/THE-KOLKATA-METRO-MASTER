@@ -10,8 +10,10 @@ import { RiMoneyRupeeCircleFill } from "react-icons/ri";
 import { RiPinDistanceFill } from "react-icons/ri";
 import { GiTicket } from "react-icons/gi";
 import { BsCalendarDateFill } from "react-icons/bs";
+import ContentLoader from 'react-content-loader'
 
 function Usertickets(props) {
+  const [contentLoader, setContentLoader] = useState(1);
   const toggleProgress = props.toggleProgress
   const [response, setResponse] = useState([])
   const handleGet = async () => {
@@ -22,6 +24,7 @@ function Usertickets(props) {
       };
       const response = await axios.get("/showtickets", config);
       if (response.status === 200) {
+        setContentLoader(0);
         setResponse(response.data)
       }
       else {
@@ -49,10 +52,11 @@ function Usertickets(props) {
     <div>
       <br />
       <div className="container-sm" style={{ backgroundColor: props.mode === 'dark' ? '#495057' : 'white', maxWidth: "1000px" }}>
+      {contentLoader === 0 ? <>
         <h1 align="center" style={{ color: props.mode === 'dark' ? 'white' : 'black' }}>My Tickets</h1>
         <br />
         <div style={{ paddingTop: "10px" }}>
-          {response.length != 0 ?
+        {response.length != 0 ?
             response.map((ticket, index) => {
               return (
                 <div className="card mb-3 container-sm" style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', maxWidth: "930px", paddingTop: "10px", paddingBottom: "10px" }}>
@@ -79,9 +83,22 @@ function Usertickets(props) {
                   </div>
                 </div>)
             }) : <h2 align="center" style={{ color: props.mode === 'dark' ? 'white' : 'black' }} >No Active Tickets</h2>
-          }
-          <br />
-        </div>
+          }<br />
+          </div></> : <></>}
+          {contentLoader === 1 ? <>
+            <br />
+        <div style={{ paddingTop: "10px" }}>
+                <ContentLoader
+                    speed={2}
+                    width={1000}
+                    height={160}
+                    viewBox="0 0 400 160"
+                    backgroundColor={`${props.mode === 'dark' ? "black" : "#f3f3f3"}`}
+                    foregroundColor="grey"
+                    {...props}
+                ></ContentLoader>
+            <br />
+        </div></> : <></>}
       </div>
       <br />
       <br />

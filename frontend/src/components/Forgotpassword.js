@@ -8,10 +8,17 @@ import { toast } from 'react-toastify';
 import Cookies from 'universal-cookie';
 import LoginError from './LoginError';
 import SpancounterProp from './SpanCounterProp';
+import { TailSpin } from 'react-loader-spinner'
 
 function Forgotpassword(props) {
+    const [loader, setLoader] = useState(0);
     const [counter, setCounter] = useState(30);
-    const toggleProgress = props.toggleProgress
+    const toggleProgress = props.toggleProgress;
+    function timeoutAndRefresh(delay){
+        setTimeout(() => {
+            navigate(0);
+        },delay)
+    }
     useEffect(() => {
         toggleProgress(70);
         toggleProgress(100);
@@ -72,7 +79,9 @@ function Forgotpassword(props) {
     const handleSubmit1 = async (event) => {
         event.preventDefault();
         try {
+            setLoader(1);
             const response = await axios.put("/forgotpassword", formData);
+            setLoader(0);
             if (response.status === 200) {
                 setVerify(true);
                 toast.info("An OTP has been sent to both the Email ID and Phone Number for password change");
@@ -83,7 +92,8 @@ function Forgotpassword(props) {
             }
         }
         catch (error) {
-            if (error.message.substring(error.message.length - 3, error.message.length) === "400") {
+            timeoutAndRefresh(3000);
+            if (error.message.substring(error.message.length - 3, error.message.length) === "400") {     
                 toast.error("User is not registered");
             }
             else {
@@ -100,7 +110,9 @@ function Forgotpassword(props) {
                 password: otpPasswordData.password1,
             }
             try {
+                setLoader(1);
                 const response = await axios.put("/verifyandchangepassword", finalOtpPasswordData);
+                setLoader(0);
                 if (response.status === 200) {
                     toggleProgress(10);
                     navigate("/log-in")
@@ -112,6 +124,7 @@ function Forgotpassword(props) {
                 }
             }
             catch (error) {
+                timeoutAndRefresh(3000);
                 if (error.message.substring(error.message.length - 3, error.message.length) === "400") {
                     setVerify(false);
                     navigate("/forgot-password")
@@ -160,8 +173,9 @@ function Forgotpassword(props) {
             <br />
             <br />
             <div className="container-sm" style={{ backgroundColor: 'rgba(0,0,0,0.5)', maxWidth: "600px" }}>
-                <h1 style={{ color: 'white' }}>Forgot Password</h1>
-                <br /><br />{verify === true ? <><form className="row g-3">
+                {(verify === true) && (loader !== 1) ? <><form className="row g-3">
+                    <h1 style={{ color: 'white' }}>Forgot Password</h1>
+                    <br /><br />
                     <div className="col-md-12">
                         <input type="text" className="form-control input white-placeholder" name="otp" style={{ backgroundColor: "transparent", border: "none", borderBottom: "2px solid #ffffff", color: "#ffffff" }} placeholder="OTP received on Email or Phone" value={otpPasswordData.otp} onChange={handleInputChange2} required />
                     </div>
@@ -191,7 +205,9 @@ function Forgotpassword(props) {
                         <Link style={{ color: "white", paddingLeft: "15px" }} to="/log-in">Log in</Link>
                     </div>
                 </form></> : <></>}
-                {verify === true ? <></> : <>
+                {(verify === true) || (loader !== 0) ? <></> : <>
+                    <h1 style={{ color: 'white' }}>Forgot Password</h1>
+                    <br /><br />
                     <form className="row g-3" onSubmit={handleSubmit1}>
                         <div className="col-md-12">
                             <input type="text" className="form-control input white-placeholder" name="credential" style={{ backgroundColor: "transparent", border: "none", borderBottom: "2px solid #ffffff", color: "#ffffff" }} placeholder="Phone Number or Email ID" value={formData.credential} onChange={handleInputChange1} required />
@@ -201,6 +217,23 @@ function Forgotpassword(props) {
                             <Link style={{ color: "white", paddingLeft: "15px" }} to="/log-in">Log in</Link>
                         </div>
                     </form></>}
+                {loader !== 1 ? <></> : <>
+                    <br />
+                    <br />
+                    <br />
+                    <TailSpin
+                        visible={true}
+                        height="80"
+                        width="550"
+                        color="#05fb08"
+                        ariaLabel="tail-spin-loading"
+                        radius="1"
+                        wrapperStyle={{}}
+                        wrapperClass=""
+                    />
+                    <br />
+                    <br />
+                </>}
                 <br />
             </div>
             <br />

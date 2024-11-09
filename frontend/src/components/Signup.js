@@ -8,10 +8,18 @@ import { toast } from 'react-toastify';
 import Cookies from 'universal-cookie';
 import LoginError from './LoginError';
 import SpancounterProp from './SpanCounterProp';
+import { TailSpin } from 'react-loader-spinner'
+
 
 function Signup(props) {
+  const [loader, setLoader] = useState(0);
   const [counter, setCounter] = useState(30);
-  const toggleProgress = props.toggleProgress
+  const toggleProgress = props.toggleProgress;
+  function timeoutAndRefresh(delay) {
+    setTimeout(() => {
+      navigate(0);
+    }, delay)
+  }
   useEffect(() => {
     toggleProgress(70);
     toggleProgress(100);
@@ -83,7 +91,9 @@ function Signup(props) {
           password: formData.password1,
         }
         try {
+          setLoader(1);
           const response = await axios.post("/register", finalFormData);
+          setLoader(0);
           if (response.status === 200) {
             setVerify(true);
             toast.info("OTPs have been sent to the Email ID and Phone Number for verification");
@@ -94,6 +104,7 @@ function Signup(props) {
           }
         }
         catch (error) {
+          timeoutAndRefresh(3000);
           if (error.message.substring(error.message.length - 3, error.message.length) === "400") {
             toast.error("Phone number or Email ID already registered");
           }
@@ -119,7 +130,9 @@ function Signup(props) {
       email_otp: otpData.email_otp,
     }
     try {
+      setLoader(1);
       const response = await axios.put("/verifyregistration", finalOtpData);
+      setLoader(0);
       if (response.status === 201) {
         toggleProgress(10);
         navigate("/log-in")
@@ -131,6 +144,7 @@ function Signup(props) {
       }
     }
     catch (error) {
+      timeoutAndRefresh(3000);
       if (error.message.substring(error.message.length - 3, error.message.length) === "400") {
         setVerify(false);
         navigate("/sign-up")
@@ -179,25 +193,29 @@ function Signup(props) {
       <br />
       <br />
       <div className="container-sm" style={{ backgroundColor: 'rgba(0,0,0,0.5)', maxWidth: "600px" }}>
-        <h1 style={{ color: 'white' }}>User Sign Up</h1>
-        <br /><br />{verify === true ? <><form className="row g-3">
-          <div className="col-md-12">
-            <input type="text" className="form-control input white-placeholder" name="phone_otp" style={{ backgroundColor: "transparent", border: "none", borderBottom: "2px solid #ffffff", color: "#ffffff" }} placeholder="OTP received on Phone" value={otpData.phone_otp} onChange={handleInputChange2} required />
-          </div>
-          <div className="col-md-12">
-            <input type="text" className="form-control input white-placeholder" name="email_otp" style={{ backgroundColor: "transparent", border: "none", borderBottom: "2px solid #ffffff", color: "#ffffff" }} placeholder="OTP received on Email" value={otpData.email_otp} onChange={handleInputChange2} required />
-          </div>
-          <div className="col-12">
-            <button type="submit" className="btn btn-primary" onClick={handleSubmit2}>Verify and Register</button>
-            <span style={{ paddingLeft: "10px" }}></span>
-            {counter === 0 ? <><button type="submit" className="btn" style={{ backgroundColor: "rgb(19 203 19)", color: "white" }} onClick={handleSubmit3}>Resend OTP</button></> : <></>}
-            {counter === 0 ? <></> : <><h7 class="card-subtitle mb-2" style={{ color: "#04f704" }}>Resend OTP in <SpancounterProp start="30" end="0" durationinseconds="30" setCounter={setCounter} /> Seconds</h7></>}
-          </div>
-          <div className="col-12">
-            <Link style={{ color: "white", paddingLeft: "15px" }} to="/log-in">Already registered? Log in</Link>
-          </div>
-        </form></> : <></>}
-        {verify === true ? <></> : <>
+        {(verify === true) && (loader !== 1) ? <>
+          <h1 style={{ color: 'white' }}>User Sign Up</h1>
+          <br /><br />
+          <form className="row g-3">
+            <div className="col-md-12">
+              <input type="text" className="form-control input white-placeholder" name="phone_otp" style={{ backgroundColor: "transparent", border: "none", borderBottom: "2px solid #ffffff", color: "#ffffff" }} placeholder="OTP received on Phone" value={otpData.phone_otp} onChange={handleInputChange2} required />
+            </div>
+            <div className="col-md-12">
+              <input type="text" className="form-control input white-placeholder" name="email_otp" style={{ backgroundColor: "transparent", border: "none", borderBottom: "2px solid #ffffff", color: "#ffffff" }} placeholder="OTP received on Email" value={otpData.email_otp} onChange={handleInputChange2} required />
+            </div>
+            <div className="col-12">
+              <button type="submit" className="btn btn-primary" onClick={handleSubmit2}>Verify and Register</button>
+              <span style={{ paddingLeft: "10px" }}></span>
+              {counter === 0 ? <><button type="submit" className="btn" style={{ backgroundColor: "rgb(19 203 19)", color: "white" }} onClick={handleSubmit3}>Resend OTP</button></> : <></>}
+              {counter === 0 ? <></> : <><h7 class="card-subtitle mb-2" style={{ color: "#04f704" }}>Resend OTP in <SpancounterProp start="30" end="0" durationinseconds="30" setCounter={setCounter} /> Seconds</h7></>}
+            </div>
+            <div className="col-12">
+              <Link style={{ color: "white", paddingLeft: "15px" }} to="/log-in">Already registered? Log in</Link>
+            </div>
+          </form></> : <></>}
+        {(verify === true) || (loader !== 0) ? <></> : <>
+          <h1 style={{ color: 'white' }}>User Sign Up</h1>
+          <br /><br />
           <form className="row g-3" onSubmit={handleSubmit1}>
             <div className="col-md-12">
               <input type="text" className="form-control input white-placeholder" name="name" style={{ backgroundColor: "transparent", border: "none", borderBottom: "2px solid #ffffff", color: "#ffffff" }} placeholder="Name" value={formData.name} onChange={handleInputChange1} required />
@@ -229,6 +247,32 @@ function Signup(props) {
               <Link style={{ color: "white", paddingLeft: "15px" }} to="/log-in">Already registered? Log in</Link>
             </div>
           </form></>}
+        {loader !== 1 ? <></> : <>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <TailSpin
+            visible={true}
+            height="80"
+            width="550"
+            color="#05fb08"
+            ariaLabel="tail-spin-loading"
+            radius="1"
+            wrapperStyle={{}}
+            wrapperClass=""
+          />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+        </>}
         <br />
       </div>
       <br />
