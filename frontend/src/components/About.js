@@ -39,7 +39,7 @@ function About(props) {
             </button>
           </h2>
           <div id="collapseTwo" className="accordion-collapse collapse" data-bs-parent="#accordionExample">
-            <dicvbv className="accordion-body" style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black', border: props.mode === 'dark' ? '0.5px solid white' : 'black' }}>
+            <div className="accordion-body" style={{ backgroundColor: props.mode === 'dark' ? 'rgb(50 52 52)' : 'white', color: props.mode === 'dark' ? 'white' : 'black', border: props.mode === 'dark' ? '0.5px solid white' : 'black' }}>
               <strong>1.</strong> User can switch between a <strong>Normal mode</strong> and a <strong>Dark mode.</strong>
               <br></br>
               <strong>2.</strong> User can perform basic <strong>CRUD operations</strong> like <strong>Sign up, Book unreserved tickets, View profile data, View active booked tickets, Change password, Update phone number, Update email id, Deactive account </strong> with the use of <strong>Spring RESTful API services and Spring Data JPA.</strong>
@@ -51,7 +51,7 @@ function About(props) {
               <strong>5.</strong> <strong>Scheduled Deletion of expired blacklisted JWTs, expired user tickets and unverified users</strong> is done by <strong>Spring Scheduler.</strong>
               <br></br>
               <strong>6.</strong> <strong>SMS and Email services for OTP verification and messaging</strong> is achieved by using <strong>Twilio and Spring Boot Starter Mail</strong> correspondingly.
-            </dicvbv>
+            </div>
           </div>
         </div>
         <div className="accordion-item">
